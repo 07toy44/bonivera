@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Find Bella Word — BONIVERA ARCADE</title>
+<link rel="stylesheet" href="../arcade.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="arcade-body fw-body">
+<main class="fw-screen" id="fw-screen">
+  <div class="fw-hud">
+    <span>Level <b id="fw-level">1</b> (<span id="fw-size">5×5</span>)</span>
+    <span class="fw-timer">⏱ <b id="fw-time">0</b>s</span><span>Percobaan <b id="fw-att">0</b></span><span>Best <b id="fw-best">0</b></span>
+    <span>Poin <b id="fw-points">0</b></span>
+    <button class="arcade-btn is-ghost fw-pausebtn fw-hintbtn" id="fw-hint" type="button">💡</button>
+    <button class="arcade-btn is-ghost fw-pausebtn" data-help type="button" aria-label="Tutorial">❓</button>
+    <button class="arcade-btn is-ghost fw-pausebtn" id="fw-mute" type="button"></button>
+    <button class="arcade-btn is-ghost fw-pausebtn" id="fw-pause" type="button" aria-label="Menu / Pause">⏸</button>
+  </div>
+  <div class="fw-bar" aria-hidden="true"><i id="fw-bar"></i></div>
+  <p class="arcade-note" id="fw-target"></p>
+  <div class="fw-board"><div class="fw-grid" id="fw-grid" role="grid" aria-label="Grid huruf"></div></div>
+  <p class="arcade-note" id="fw-feedback" role="status" aria-live="polite">Geser dari huruf pertama ke huruf terakhir.</p>
+</main>
+<div class="fw-modal arcade-overlay" id="fw-ready"><div class="arcade-dialog"><h2>Level <span id="fw-ready-lv"></span></h2>
+  <p class="arcade-note" id="fw-ready-info"></p><div class="arcade-row"><button class="arcade-btn" id="fw-go" type="button">MULAI</button></div>
+  <p class="arcade-note">Waktu baru berjalan setelah kamu menekan MULAI.</p></div></div>
+<div class="fw-modal arcade-overlay" id="fw-pausemenu" hidden><div class="arcade-dialog"><h2>Jeda</h2>
+  <p class="arcade-note">Waktu berhenti. Grid disembunyikan selama jeda.</p>
+  <div class="arcade-row"><label for="fw-pick">Level:</label><select class="arcade-select" id="fw-pick"></select></div>
+  <div class="arcade-row"><button class="arcade-btn" id="fw-resume" type="button">LANJUT</button><button class="arcade-btn is-ghost" id="fw-restart" type="button">ACAK ULANG LEVEL</button><button class="arcade-btn is-ghost" data-help type="button">❓ TUTORIAL</button></div>
+  <div class="arcade-row"><a class="arcade-btn is-ghost" data-nav="game" href="../arcade.html">BACK TO GAME HOME</a><a class="arcade-btn is-ghost" data-nav="site" href="../../index.html">BACK TO WEBSITE HOME</a></div>
+</div></div>
+<div class="fw-modal arcade-overlay" id="fw-result" hidden>
+    <div class="arcade-dialog"><h2 id="fw-r-title">Level Selesai! ✔</h2>
+      <div class="arcade-kv"><span>Level</span><b id="fw-r-level"></b></div>
+      <div class="arcade-kv"><span>Waktu</span><b id="fw-r-time"></b></div>
+      <div class="arcade-kv"><span>Percobaan</span><b id="fw-r-att"></b></div>
+      <div class="arcade-kv"><span>Skor</span><b id="fw-r-score"></b></div>
+      <div class="arcade-kv"><span>Best level ini</span><b id="fw-r-best"></b></div>
+      <p class="arcade-note" id="fw-r-note"></p>
+      <div class="arcade-row">
+        <button class="arcade-btn" id="fw-next" type="button">NEXT LEVEL</button>
+        <button class="arcade-btn is-ghost" id="fw-retry" type="button">RETRY</button>
+        <a class="arcade-btn is-ghost" data-nav="game" href="../arcade.html">BACK TO GAME HOME</a>
+        <a class="arcade-btn is-ghost" data-nav="site" href="../../index.html">BACK TO WEBSITE HOME</a>
+      </div>
+    </div>
+  </div>
+<script src="anti-inspect.js" defer></script>
+<script src="../games-registry.js"></script>
+<script src="../arcade-storage.js"></script>
+<script src="../arcade-audio.js"></script>
+<script src="../arcade-tutorial.js"></script>
+<script src="game.js"></script>
+</body>
+</html>

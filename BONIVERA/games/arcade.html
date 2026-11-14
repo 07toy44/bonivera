@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a1326">
+  <title>BONIVERA ARCADE</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="./arcade.css">
+
+  <style>
+    /* =====================================
+       BONIVERA ARCADE — TRIAL ANNOUNCEMENT
+       (semua gaya popup diawali "ba-trial")
+    ===================================== */
+    #ba-trial-popup {
+      --bg: #0a1326; --panel-light: #193660; --line: #3e5e8c; --light: #bfd7f1; --mid: #7a9bbe;
+      --text: #edf5ff; --muted: #b5c8e1; --gold: #ffd76a; --pink: #f3c6e5;
+      position: fixed; inset: 0; z-index: 99999; display: flex; align-items: center; justify-content: center;
+      padding: 18px; overflow-y: auto; background: rgba(3, 8, 20, .78);
+      -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); animation: ba-overlay-in .25s ease both;
+    }
+    #ba-trial-popup[hidden] { display: none !important; }
+    #ba-trial-popup, #ba-trial-popup * { box-sizing: border-box; }
+
+    .ba-trial-modal {
+      position: relative; width: min(100%, 490px); max-height: calc(100dvh - 36px); overflow-x: hidden; overflow-y: auto;
+      padding: 22px; color: var(--text); font-family: Rubik, system-ui, sans-serif;
+      background: linear-gradient(145deg, rgba(25, 54, 96, .98), rgba(10, 19, 38, .99) 70%);
+      border: 2px solid var(--line); border-radius: 12px;
+      box-shadow: 0 0 0 4px rgba(62, 94, 140, .18), 0 20px 60px rgba(0, 0, 0, .4), 0 5px 0 #050b16;
+      animation: ba-card-in .35s ease both;
+    }
+    .ba-trial-modal::before {
+      content: ""; position: absolute; top: 0; left: 0; right: 0; height: 5px;
+      background: repeating-linear-gradient(90deg, var(--gold) 0 12px, transparent 12px 18px, var(--light) 18px 30px, transparent 30px 36px);
+    }
+
+    /* Header */
+    .ba-trial-header { display: flex; align-items: center; gap: 13px; padding: 5px 42px 18px 0; border-bottom: 1px dashed rgba(122, 155, 190, .4); }
+    .ba-trial-logo {
+      flex: 0 0 52px; width: 52px; height: 52px; display: grid; place-items: center; position: relative;
+      background: var(--panel-light); border: 2px solid var(--light); box-shadow: 4px 4px 0 #050b16;
+      color: var(--gold); font: 18px "Press Start 2P", monospace;
+    }
+    .ba-trial-logo::after {
+      content: "♥"; position: absolute; right: -8px; bottom: -8px; display: grid; place-items: center; width: 20px; height: 20px;
+      background: var(--pink); border: 2px solid var(--bg); color: #24395e; font: 12px system-ui, sans-serif;
+    }
+    .ba-trial-header-info { min-width: 0; flex: 1; }
+    .ba-trial-brand { margin: 0 0 8px; color: var(--light); font: 9px/1.6 "Press Start 2P", monospace; letter-spacing: -.4px; }
+    .ba-trial-status {
+      display: inline-flex; align-items: center; gap: 7px; padding: 5px 8px; background: rgba(255, 215, 106, .09);
+      border: 1px solid rgba(255, 215, 106, .5); border-radius: 4px; color: var(--gold); font: 7px/1.5 "Press Start 2P", monospace;
+    }
+    .ba-trial-status-dot { width: 6px; height: 6px; flex: 0 0 6px; border-radius: 1px; background: var(--gold); animation: ba-blink 1.4s steps(2) infinite; }
+    .ba-trial-close {
+      position: absolute; top: 17px; right: 17px; width: 32px; height: 32px; display: grid; place-items: center;
+      background: rgba(10, 19, 38, .8); border: 1px solid var(--line); border-radius: 5px; color: var(--light);
+      font: 23px/1 system-ui, sans-serif; cursor: pointer; transition: .2s;
+    }
+    .ba-trial-close:hover { background: var(--panel-light); border-color: var(--gold); color: var(--gold); }
+
+    /* Greeting */
+    .ba-trial-greeting { padding: 19px 0 15px; }
+    .ba-trial-eyebrow { margin: 0 0 9px; color: var(--mid); font: 7px/1.8 "Press Start 2P", monospace; letter-spacing: .2px; }
+    .ba-trial-greeting h2 { margin: 0 0 11px; color: var(--light); font: 17px/1.8 "Press Start 2P", monospace; text-shadow: 2px 2px 0 var(--line); }
+    .ba-trial-greeting h2 span { color: var(--pink); }
+    .ba-trial-intro { margin: 0; color: var(--text); font-size: 13px; line-height: 1.85; }
+    .ba-trial-intro strong { color: var(--pink); }
+
+    /* Sections */
+    .ba-trial-section { margin-top: 13px; padding: 14px; background: rgba(5, 13, 29, .32); border: 1px solid rgba(122, 155, 190, .28); border-radius: 7px; }
+    .ba-trial-section-title { display: flex; align-items: center; gap: 9px; margin: 0 0 10px; color: var(--light); font: 8px/1.8 "Press Start 2P", monospace; }
+    .ba-trial-section-icon {
+      flex: 0 0 23px; width: 23px; height: 23px; display: grid; place-items: center; background: var(--panel-light);
+      border: 1px solid var(--line); border-radius: 4px; color: var(--gold); font: bold 12px system-ui, sans-serif;
+    }
+    .ba-trial-description { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.9; }
+    .ba-trial-description + .ba-trial-description { margin-top: 10px; }
+    .ba-trial-description strong { color: var(--light); }
+
+    /* Important notes */
+    .ba-trial-note { margin-top: 13px; padding: 14px; background: rgba(255, 215, 106, .045); border: 1px solid rgba(255, 215, 106, .32); border-radius: 7px; }
+    .ba-trial-note .ba-trial-section-title { color: var(--gold); }
+    .ba-trial-list { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+    .ba-trial-list li { display: grid; grid-template-columns: 19px minmax(0, 1fr); align-items: start; gap: 8px; color: var(--muted); font-size: 11px; line-height: 1.8; }
+    .ba-trial-list-marker {
+      width: 19px; height: 19px; display: grid; place-items: center; margin-top: 1px; background: rgba(255, 215, 106, .12);
+      border: 1px solid rgba(255, 215, 106, .35); border-radius: 4px; color: var(--gold); font-size: 11px; font-weight: 700;
+    }
+
+    /* Closing */
+    .ba-trial-thanks { margin: 17px 2px 0; color: var(--muted); font-size: 12px; line-height: 1.9; text-align: center; }
+    .ba-trial-signoff { margin: 10px 0 0; color: var(--pink); font-size: 13px; line-height: 1.8; font-weight: 700; text-align: center; }
+
+    /* Continue button */
+    .ba-trial-button {
+      width: 100%; min-height: 46px; display: flex; align-items: center; justify-content: center; gap: 9px; margin-top: 19px; padding: 12px;
+      background: var(--light); border: 2px solid #050b16; border-radius: 5px; box-shadow: 0 4px 0 var(--line), 0 6px 0 #050b16;
+      color: var(--bg); font: 8px/1.8 "Press Start 2P", monospace; cursor: pointer; transition: transform .15s, filter .15s, box-shadow .15s;
+    }
+    .ba-trial-button:hover { filter: brightness(1.08); }
+    .ba-trial-button:active { transform: translateY(4px); box-shadow: 0 0 0 var(--line), 0 2px 0 #050b16; }
+
+    /* Footer */
+    .ba-trial-footer {
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-top: 17px; padding-top: 12px;
+      border-top: 1px dashed rgba(122, 155, 190, .4); color: #8ca7ca; font: 6px/1.8 "Press Start 2P", monospace;
+    }
+    .ba-trial-footer span:last-child { color: var(--mid); }
+    .ba-trial-close:focus-visible, .ba-trial-button:focus-visible { outline: 3px solid var(--gold); outline-offset: 4px; }
+
+    @keyframes ba-overlay-in { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes ba-card-in { from { opacity: 0; transform: translateY(12px) scale(.985); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    @keyframes ba-blink { 50% { opacity: .35; } }
+
+    /* Mobile */
+    @media (max-width: 480px) {
+      #ba-trial-popup { padding: 10px; }
+      .ba-trial-modal { width: 100%; max-height: calc(100dvh - 20px); padding: 18px 15px 15px; border-radius: 9px; }
+      .ba-trial-header { gap: 11px; padding-right: 34px; }
+      .ba-trial-logo { flex-basis: 44px; width: 44px; height: 44px; font-size: 15px; }
+      .ba-trial-brand { font-size: 7px; }
+      .ba-trial-status { font-size: 6px; }
+      .ba-trial-close { top: 14px; right: 13px; width: 29px; height: 29px; }
+      .ba-trial-greeting { padding-top: 17px; }
+      .ba-trial-greeting h2 { font-size: 14px; }
+      .ba-trial-intro { font-size: 12px; }
+      .ba-trial-section, .ba-trial-note { padding: 11px; }
+      .ba-trial-section-title { font-size: 7px; }
+      .ba-trial-description { font-size: 11px; }
+      .ba-trial-list li { font-size: 10px; }
+      .ba-trial-thanks { font-size: 11px; }
+      .ba-trial-signoff { font-size: 12px; }
+      .ba-trial-button { font-size: 7px; }
+      .ba-trial-footer { font-size: 5px; }
+    }
+    @media (max-width: 350px) {
+      .ba-trial-greeting h2 { font-size: 12px; }
+      .ba-trial-brand { font-size: 6px; }
+      .ba-trial-section-title { font-size: 6px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      #ba-trial-popup, #ba-trial-popup * { animation: none !important; transition: none !important; }
+    }
+  </style>
+</head>
+
+<body class="arcade-body">
+<div class="arcade-wrap">
+
+  <!-- Navigasi atas -->
+  <header class="arcade-top">
+    <div class="arcade-logo">BONIVERA<span>ARCADE</span></div>
+
+    <div class="arcade-row" style="margin:0">
+      <button class="arcade-btn arcade-btn-sm is-ghost" id="arcade-settings-btn" type="button" aria-haspopup="dialog" aria-expanded="false">⚙ SETTING</button>
+      <!-- href final diatur dari games-registry.js (config.websiteHome); ini hanya cadangan -->
+      <a class="arcade-btn arcade-btn-sm is-ghost" id="arcade-back-site" href="../home.html">← Website Home</a>
+    </div>
+  </header>
+
+  <!-- Konten arcade -->
+  <main>
+    <section class="arcade-hero">
+      <h1>BONIVERA ARCADE</h1>
+      <span class="arcade-insert">▶ INSERT COIN ◀</span>
+      <p>Pilih game bertema Bella, kumpulkan skor dan coin, putar spin harian, lalu amankan progresmu.</p>
+    </section>
+
+    <section aria-label="Daftar game">
+      <div class="arcade-grid" id="arcade-games"></div>
+    </section>
+  </main>
+</div>
+
+<!-- =====================================
+     POPUP SETTING: Export / Import / Hapus Progres
+====================================== -->
+<div class="arcade-overlay arcade-modal arcade-settings" id="arcade-settings" hidden role="dialog" aria-modal="true" aria-labelledby="arcade-settings-title">
+  <div class="arcade-dialog">
+    <h2 id="arcade-settings-title">⚙ SETTING</h2>
+
+    <section aria-labelledby="arcade-data-title">
+      <h3 id="arcade-data-title">Export / Import</h3>
+      <p class="arcade-note">Progres disimpan di browser ini dan tidak sinkron antarperangkat. Backup berupa kode terenkripsi yang dikunci PIN.</p>
+
+      <div class="arcade-row">
+        <label for="arcade-export-select">Export:</label>
+        <select class="arcade-select" id="arcade-export-select">
+          <option value="bellaRun">Bella Run</option>
+          <option value="findBellaWord">Find Bella Word</option>
+          <option value="bellaFight">Bella Fight</option>
+          <option value="ticTacBell">Tic Tac Bell</option>
+          <option value="all">All Games</option>
+        </select>
+        <button class="arcade-btn" id="arcade-export-btn" type="button">EXPORT DATA</button>
+        <label class="arcade-btn is-ghost" for="arcade-import-file">IMPORT DATA</label>
+        <input type="file" id="arcade-import-file" hidden>
+      </div>
+
+      <p class="arcade-note" id="arcade-export-status" aria-live="polite"></p>
+      <div class="arcade-row">
+        <button class="arcade-btn is-ghost" id="arcade-paste-btn" type="button">IMPORT DARI TEMPEL KODE</button>
+      </div>
+    </section>
+
+    <section aria-labelledby="arcade-del-title">
+      <h3 id="arcade-del-title">Hapus Progres</h3>
+      <p class="arcade-note">Menghapus data game di perangkat ini. Tidak bisa dibatalkan — Export dulu bila ragu.</p>
+      <div class="arcade-row">
+        <select class="arcade-select" id="arcade-del-select" aria-label="Game yang dihapus">
+          <option value="bellaRun">Bella Run</option>
+          <option value="findBellaWord">Find Bella Word</option>
+          <option value="bellaFight">Bella Fight</option>
+          <option value="ticTacBell">Tic Tac Bell</option>
+          <option value="all">Semua Game</option>
+        </select>
+        <button class="arcade-btn is-danger" id="arcade-del-btn" type="button">HAPUS PROGRES…</button>
+      </div>
+    </section>
+
+    <div class="arcade-row">
+      <button class="arcade-btn" id="arcade-settings-close" type="button">TUTUP</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal serbaguna (PIN export/import, konfirmasi hapus, dll.) -->
+<div class="arcade-overlay arcade-modal" id="arcade-modal" hidden role="dialog" aria-modal="true" aria-labelledby="arcade-modal-title">
+  <div class="arcade-dialog" id="arcade-modal-body"></div>
+</div>
+
+<!-- =====================================
+     POPUP PENGUMUMAN TRIAL
+====================================== -->
+<div id="ba-trial-popup" role="dialog" aria-modal="true" aria-labelledby="ba-trial-title" aria-describedby="ba-trial-description" hidden>
+  <div class="ba-trial-modal">
+
+    <button class="ba-trial-close" id="ba-trial-close" type="button" aria-label="Tutup pengumuman">&times;</button>
+
+    <header class="ba-trial-header">
+      <div class="ba-trial-logo" aria-hidden="true">B</div>
+      <div class="ba-trial-header-info">
+        <p class="ba-trial-brand">BONIVERA ARCADE</p>
+        <div class="ba-trial-status"><span class="ba-trial-status-dot"></span>TRIAL VERSION</div>
+      </div>
+    </header>
+
+    <section class="ba-trial-greeting">
+      <p class="ba-trial-eyebrow">A LITTLE MESSAGE FROM MINBOO</p>
+      <h2 id="ba-trial-title">HAII BESTIE<br><span>MINBOO!! 🩵🎀</span></h2>
+      <p class="ba-trial-intro">Makasih yaaaa udah mampir dan nyobain <strong>BONIVERA ARCADE!</strong> 🥹💗</p>
+    </section>
+
+    <section class="ba-trial-section">
+      <h3 class="ba-trial-section-title"><span class="ba-trial-section-icon" aria-hidden="true">i</span>INFO TRIAL</h3>
+      <p id="ba-trial-description" class="ba-trial-description">
+        Minboo mau kasih tahu kalau saat ini <strong>BONIVERA ARCADE</strong> masih dalam tahap
+        <strong>trial alias percobaan</strong>, yaaa! Versi full-nya masih dalam proses pengembangan dan
+        belum ada kepastian kapan bakal dirilis.
+      </p>
+      <p class="ba-trial-description">
+        Jadi, kalau selama main kalian masih nemuin banyak bug, error, atau fitur yang belum berfungsi dengan baik,
+        Minboo minta maaf yaaa 🥹🙏🏻 Mohon dimaklumi karena BONIVERA ARCADE masih terus dikembangin supaya nantinya
+        bisa jadi lebih baik dan nyaman buat dimainkan.
+      </p>
+    </section>
+
+    <section class="ba-trial-note">
+      <h3 class="ba-trial-section-title"><span class="ba-trial-section-icon" aria-hidden="true">!</span>PLEASE NOTE</h3>
+      <ul class="ba-trial-list">
+        <li><span class="ba-trial-list-marker">1</span><span>Beberapa fitur mungkin belum berjalan dengan sempurna.</span></li>
+        <li><span class="ba-trial-list-marker">2</span><span>Progress dan fitur yang tersedia bisa berubah sewaktu-waktu selama proses pengembangan.</span></li>
+        <li><span class="ba-trial-list-marker">3</span><span>Kalau kalian nemuin bug atau kendala, jangan ragu buat kasih tahu Minboo, yaaa! Masukan dari kalian bakal sangat membantu. 🫶🏻</span></li>
+      </ul>
+    </section>
+
+    <p class="ba-trial-thanks">
+      Sekali lagi, makasih banyak buat semua bestie yang udah mau nyobain BONIVERA ARCADE dari tahap awal ini.
+      Makasih juga udah sabar nemenin proses pengembangannya! 💗
+    </p>
+    <p class="ba-trial-signoff">Have fun playing, bestiee!! 🩵✨</p>
+
+    <button id="ba-trial-continue" class="ba-trial-button" type="button">🩵 MENGERTI, LANJUTKAN!</button>
+
+    <footer class="ba-trial-footer">
+      <span>BONIVERA ARCADE</span>
+      <span>BUILD 0.1 · TRIAL</span>
+    </footer>
+  </div>
+</div>
+
+<!-- Skrip utama arcade -->
+<script src="anti-inspect.js" defer></script>
+<script src="./games-registry.js"></script>
+<script src="./arcade-storage.js"></script>
+<script src="./arcade-sprites.js"></script>
+<script src="./arcade-export.js"></script>
+<script src="./arcade.js"></script>
+
+
+<!-- Kontrol popup trial -->
+<script>
+(function () {
+  'use strict';
+
+  var popup = document.getElementById('ba-trial-popup');
+  var closeBtn = document.getElementById('ba-trial-close');
+  var continueBtn = document.getElementById('ba-trial-continue');
+  var KEY = 'bonivera_arcade_trial_notice_seen'; // tampil sekali per sesi browser
+  var previousFocus = null;
+
+  if (!popup || !closeBtn || !continueBtn) return;
+
+  function closePopup() {
+    popup.hidden = true;
+    document.body.style.overflow = '';
+    document.removeEventListener('keydown', onKey);
+    if (previousFocus && typeof previousFocus.focus === 'function') previousFocus.focus();
+    try { sessionStorage.setItem(KEY, '1'); } catch (_) { /* tetap bisa ditutup */ }
+  }
+
+  function onKey(e) {
+    if (e.key === 'Escape') return closePopup();
+    if (e.key !== 'Tab') return;
+    // fokus dikunci di dalam popup
+    var items = popup.querySelectorAll('button'), first = items[0], last = items[items.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  }
+
+  function openPopup() {
+    previousFocus = document.activeElement;
+    popup.hidden = false;
+    document.body.style.overflow = 'hidden';
+    document.addEventListener('keydown', onKey);
+    continueBtn.focus();
+  }
+
+  closeBtn.addEventListener('click', closePopup);
+  continueBtn.addEventListener('click', closePopup);
+  popup.addEventListener('click', function (e) { if (e.target === popup) closePopup(); });
+
+  var seen = false;
+  try { seen = sessionStorage.getItem(KEY) === '1'; } catch (_) { /* tampilkan popup */ }
+  if (!seen) window.requestAnimationFrame(openPopup);
+})();
+</script>
+
+</body>
+
+
+
+<!-- ==================================================
+     BONIVERA ARCADE — FIXED BACKUP WARNING
+     HTML + CSS + JAVASCRIPT DALAM SATU KODE
+================================================== -->
+
+<div id="ba-backup-warning" role="status" aria-live="polite">
+  <div class="ba-bw-topline">
+    <span class="ba-bw-system">
+      <span class="ba-bw-light"></span>
+      BONIVERA ARCADE
+    </span>
+    <span class="ba-bw-label">DATA NOTICE</span>
+  </div>
+
+  <div class="ba-bw-main">
+    <div class="ba-bw-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none">
+        <path d="M12 3 22 20H2L12 3Z"
+          stroke="currentColor" stroke-width="1.8"
+          stroke-linejoin="round"/>
+        <path d="M12 9V14"
+          stroke="currentColor" stroke-width="2"
+          stroke-linecap="round"/>
+        <circle cx="12" cy="17" r="1"
+          fill="currentColor"/>
+      </svg>
+    </div>
+
+    <div class="ba-bw-copy">
+      <h3>JANGAN LUPA BACKUP PROGRES SECARA BERKALA!</h3>
+      <p>
+        Progres game tersimpan di <strong>localStorage browser</strong>.
+        Data bisa hilang jika data browser terhapus atau perangkat berganti.
+        Gunakan fitur <strong>EXPORT DATA</strong> secara berkala untuk
+        menyimpan cadangan progresmu.
+      </p>
+    </div>
+
+    <button
+      type="button"
+      id="ba-bw-close"
+      aria-label="Tutup peringatan"
+      title="Tutup peringatan">
+      ×
+    </button>
+  </div>
+
+  <div class="ba-bw-bottom">
+    <span>BACKUP REGULARLY • KEEP YOUR PROGRESS SAFE</span>
+    <span class="ba-bw-version">SAVE REMINDER</span>
+  </div>
+
+  <div class="ba-bw-scan" aria-hidden="true"></div>
+</div>
+
+<style>
+  
+/* ==================================================
+   BONIVERA ARCADE — BACKUP WARNING
+================================================== */
+
+#ba-backup-warning {
+  --bw-blue: #bfd7f1;
+  --bw-mid: #7a9bbe;
+  --bw-deep: #203c61;
+  --bw-light: #e8f2ff;
+  --bw-gold: #ffd27a;
+
+  position: fixed;
+  left: 50%;
+  bottom: 18px;
+  z-index: 99999;
+
+  width: min(680px, calc(100% - 32px));
+  margin: 0;
+  padding: 0;
+
+  overflow: hidden;
+  isolation: isolate;
+
+  color: var(--bw-light);
+  background:
+    linear-gradient(
+      115deg,
+      rgba(25, 48, 78, .98),
+      rgba(35, 63, 97, .97) 55%,
+      rgba(27, 48, 73, .98)
+    );
+
+  border: 1px solid rgba(191, 215, 241, .32);
+  border-radius: 7px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, .28);
+
+  font-family: inherit;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+
+  transform: translate(-50%, 18px);
+  transition:
+    opacity .35s ease,
+    transform .35s ease,
+    visibility .35s ease;
+}
+
+/* Saat aktif */
+#ba-backup-warning.ba-bw-visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translate(-50%, 0);
+}
+
+/* Garis dekorasi atas */
+#ba-backup-warning::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  z-index: 2;
+
+  background: linear-gradient(
+    90deg,
+    var(--bw-mid),
+    var(--bw-gold),
+    var(--bw-blue),
+    var(--bw-mid)
+  );
+
+  background-size: 200% 100%;
+  animation: ba-bw-gradient 5s linear infinite;
+}
+
+/* Header */
+#ba-backup-warning .ba-bw-topline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  padding: 9px 13px 7px;
+  border-bottom: 1px solid rgba(191, 215, 241, .12);
+
+  font-family: "Courier New", monospace;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1.1px;
+}
+
+#ba-backup-warning .ba-bw-system {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--bw-blue);
+}
+
+#ba-backup-warning .ba-bw-light {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 7px;
+  background: var(--bw-gold);
+  box-shadow: 0 0 8px rgba(255, 210, 122, .5);
+  animation: ba-bw-blink 1.6s steps(2, start) infinite;
+}
+
+#ba-backup-warning .ba-bw-label {
+  color: var(--bw-gold);
+  opacity: .9;
+}
+
+/* Isi utama */
+#ba-backup-warning .ba-bw-main {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px;
+}
+
+#ba-backup-warning .ba-bw-icon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 38px;
+  width: 38px;
+  height: 38px;
+
+  color: var(--bw-gold);
+  background: rgba(255, 210, 122, .09);
+  border: 1px solid rgba(255, 210, 122, .32);
+  border-radius: 5px;
+
+  animation: ba-bw-icon-pulse 2.8s ease-in-out infinite;
+}
+
+#ba-backup-warning .ba-bw-icon svg {
+  display: block;
+  width: 23px;
+  height: 23px;
+}
+
+#ba-backup-warning .ba-bw-copy {
+  flex: 1;
+  min-width: 0;
+}
+
+#ba-backup-warning .ba-bw-copy h3 {
+  margin: 0 0 6px;
+  color: var(--bw-gold);
+
+  font-family: "Courier New", monospace;
+  font-size: 12px;
+  font-weight: 900;
+  line-height: 1.5;
+  letter-spacing: .25px;
+}
+
+#ba-backup-warning .ba-bw-copy p {
+  margin: 0;
+  color: #d8e6f7;
+
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+#ba-backup-warning .ba-bw-copy strong {
+  color: #fff0ca;
+  font-weight: 800;
+}
+
+/* Tombol tutup */
+#ba-backup-warning #ba-bw-close {
+  display: grid;
+  place-items: center;
+  flex: 0 0 27px;
+
+  width: 27px;
+  height: 27px;
+  padding: 0;
+
+  color: #d8e6f7;
+  background: rgba(191, 215, 241, .07);
+  border: 1px solid rgba(191, 215, 241, .2);
+  border-radius: 4px;
+
+  font: inherit;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+
+  transition:
+    background .2s ease,
+    color .2s ease,
+    border-color .2s ease;
+}
+
+#ba-backup-warning #ba-bw-close:hover {
+  color: var(--bw-gold);
+  background: rgba(255, 210, 122, .12);
+  border-color: rgba(255, 210, 122, .4);
+}
+
+/* Footer mini */
+#ba-backup-warning .ba-bw-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 5px 12px;
+
+  padding: 7px 13px;
+  color: #9fb9d8;
+  background: rgba(8, 20, 36, .2);
+  border-top: 1px solid rgba(191, 215, 241, .12);
+
+  font-family: "Courier New", monospace;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: .4px;
+}
+
+#ba-backup-warning .ba-bw-version {
+  color: var(--bw-gold);
+  opacity: .9;
+}
+
+/* Garis animasi bawah */
+#ba-backup-warning .ba-bw-scan {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+
+  width: 30%;
+  height: 2px;
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--bw-mid),
+    var(--bw-gold),
+    transparent
+  );
+
+  pointer-events: none;
+  animation: ba-bw-scan 4.5s ease-in-out infinite alternate;
+}
+
+/* Animasi */
+@keyframes ba-bw-gradient {
+  from { background-position: 0% 50%; }
+  to   { background-position: 200% 50%; }
+}
+
+@keyframes ba-bw-blink {
+  to { opacity: .35; }
+}
+
+@keyframes ba-bw-icon-pulse {
+  0%, 100% { box-shadow: 0 0 0 rgba(255, 210, 122, 0); }
+  50% { box-shadow: 0 0 12px rgba(255, 210, 122, .1); }
+}
+
+@keyframes ba-bw-scan {
+  from { transform: translateX(-10%); }
+  to   { transform: translateX(240%); }
+}
+
+/* Responsif HP */
+@media (max-width: 600px) {
+  #ba-backup-warning {
+    bottom: 10px;
+    width: calc(100% - 20px);
+    border-radius: 6px;
+  }
+
+  #ba-backup-warning .ba-bw-topline {
+    padding: 8px 10px 6px;
+    font-size: 8px;
+  }
+
+  #ba-backup-warning .ba-bw-main {
+    gap: 9px;
+    padding: 10px;
+  }
+
+  #ba-backup-warning .ba-bw-icon {
+    flex-basis: 30px;
+    width: 30px;
+    height: 30px;
+  }
+
+  #ba-backup-warning .ba-bw-icon svg {
+    width: 19px;
+    height: 19px;
+  }
+
+  #ba-backup-warning .ba-bw-copy h3 {
+    font-size: 10px;
+  }
+
+  #ba-backup-warning .ba-bw-copy p {
+    font-size: 10px;
+    line-height: 1.6;
+  }
+
+  #ba-backup-warning .ba-bw-bottom {
+    padding: 6px 10px;
+    font-size: 7px;
+  }
+}
+
+/* Hormati preferensi pengurangan animasi */
+@media (prefers-reduced-motion: reduce) {
+  #ba-backup-warning,
+  #ba-backup-warning::before,
+  #ba-backup-warning .ba-bw-light,
+  #ba-backup-warning .ba-bw-icon,
+  #ba-backup-warning .ba-bw-scan {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+</style>
+
+<script>
+(function () {
+  'use strict';
+
+  var warning = document.getElementById('ba-backup-warning');
+  var closeButton = document.getElementById('ba-bw-close');
+
+  if (!warning || !closeButton) return;
+
+  var dismissed = false;
+  var showThreshold = 180;
+
+  /*
+   * Warning muncul setelah halaman digulir sedikit.
+   * Tetap fixed di layar ketika pengunjung melanjutkan scroll.
+   */
+  function updateWarningVisibility() {
+    if (dismissed) return;
+
+    if (window.scrollY >= showThreshold) {
+      warning.classList.add('ba-bw-visible');
+    } else {
+      warning.classList.remove('ba-bw-visible');
+    }
+  }
+
+  window.addEventListener('scroll', updateWarningVisibility, {
+    passive: true
+  });
+
+  window.addEventListener('resize', updateWarningVisibility);
+
+  /*
+   * Tombol tutup menyembunyikan warning sampai halaman
+   * dimuat ulang. Tidak menghapus data game.
+   */
+  closeButton.addEventListener('click', function () {
+    dismissed = true;
+    warning.classList.remove('ba-bw-visible');
+    warning.setAttribute('aria-hidden', 'true');
+  });
+
+  updateWarningVisibility();
+})();
+
+</script>
+
+<!-- =============== END BACKUP WARNING =============== -->
+
+
+
+
+</html>

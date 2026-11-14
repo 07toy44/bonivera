@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Bella Fight — BONIVERA ARCADE</title>
+<link rel="stylesheet" href="../arcade.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="arcade-body bf-body">
+<div class="bf-stage" id="bf-stage">
+  <canvas id="bf-canvas" role="img" aria-label="Arena Bella Fight"></canvas>
+  <button class="bf-top bf-pause" id="bf-pause" type="button" aria-label="Pause">⏸</button>
+  <button class="bf-top bf-mute" id="bf-mute" type="button"></button>
+  <button class="bf-top bf-help" data-help type="button" aria-label="Tutorial">❓</button>
+  <div class="bf-items" id="bf-items" aria-label="Buff"></div>
+  <div class="bf-touch" id="bf-touch">
+    <div class="bf-cluster"><button class="arcade-btn bf-pad" data-k="l" aria-label="Kiri">◀</button><button class="arcade-btn bf-pad" data-k="r" aria-label="Kanan">▶</button></div>
+    <div class="bf-cluster"><button class="arcade-btn bf-pad" data-k="j" aria-label="Lompat">⬆</button><button class="arcade-btn bf-pad" data-k="b" aria-label="Blok">🛡</button><button class="arcade-btn bf-pad" data-k="p" aria-label="Pukul">👊</button><button class="arcade-btn bf-pad" data-k="k" aria-label="Tendang">🦵</button></div>
+  </div>
+
+  <div class="arcade-overlay" id="bf-menu"><div class="arcade-dialog">
+    <h2>Bella Fight</h2>
+    <p class="arcade-note">Duel 1 lawan 1 gaya Shadow Fight versi ringan. Kalahkan lawan sebelum HP-mu habis!</p>
+    <div class="arcade-kv"><span>Karakter</span><b id="bf-m-char">-</b></div>
+    <div class="arcade-kv"><span>Coin</span><b id="bf-m-coins">0</b></div>
+    <div class="arcade-kv"><span>Stage</span><b><select class="arcade-select" id="bf-stage-pick" aria-label="Pilih stage"></select></b></div>
+    <div class="arcade-row"><button class="arcade-btn" id="bf-start" type="button">FIGHT!</button><button class="arcade-btn is-ghost" data-shop type="button">SHOP & KARAKTER</button><button class="arcade-btn is-ghost" data-help type="button">❓ TUTORIAL</button></div>
+    <div class="arcade-row"><a class="arcade-btn is-ghost" data-nav="game" href="../arcade.html">BACK TO GAME HOME</a><a class="arcade-btn is-ghost" data-nav="site" href="../../index.html">BACK TO WEBSITE HOME</a></div>
+  </div></div>
+
+  <div class="arcade-overlay" id="bf-shop" hidden><div class="arcade-dialog">
+    <h2>Shop</h2><p class="arcade-note">Coin: <b id="bf-s-coins">0</b></p>
+    <h3>Karakter</h3><div id="bf-char-list"></div>
+    <h3>Buff (dipakai saat duel)</h3><div id="bf-buff-list"></div>
+    <div class="arcade-row"><button class="arcade-btn" id="bf-shop-close" type="button">KEMBALI</button></div>
+  </div></div>
+
+  <div class="arcade-overlay" id="bf-pause-menu" hidden><div class="arcade-dialog"><h2>Jeda</h2>
+    <div class="arcade-row"><button class="arcade-btn" id="bf-resume" type="button">LANJUT</button><button class="arcade-btn is-ghost" id="bf-quit" type="button">MENYERAH</button></div>
+  </div></div>
+
+  <div class="arcade-overlay" id="bf-over" hidden><div class="arcade-dialog">
+    <h2 id="bf-o-title">HASIL</h2><p class="arcade-note" id="bf-o-sub"></p>
+    <div class="arcade-kv"><span>Coin didapat</span><b id="bf-o-gain">0</b></div>
+    <div class="arcade-kv"><span>Total coin</span><b id="bf-o-coins">0</b></div>
+    <div class="arcade-row"><button class="arcade-btn" id="bf-next" type="button">NEXT STAGE</button><button class="arcade-btn is-ghost" id="bf-retry" type="button">RETRY</button><button class="arcade-btn is-ghost" data-shop type="button">SHOP</button><button class="arcade-btn is-ghost" id="bf-tomenu" type="button">MENU</button></div>
+    <div class="arcade-row"><a class="arcade-btn is-ghost" data-nav="game" href="../arcade.html">BACK TO GAME HOME</a><a class="arcade-btn is-ghost" data-nav="site" href="../../index.html">BACK TO WEBSITE HOME</a></div>
+  </div></div>
+</div>
+<script src="anti-inspect.js" defer></script>
+<script src="../games-registry.js"></script>
+<script src="../arcade-storage.js"></script>
+<script src="../arcade-audio.js"></script>
+<script src="../arcade-tutorial.js"></script>
+<script src="../arcade-sprites.js"></script>
+<script src="game.js"></script>
+
+</body>
+
+
+
+
+
+
+
+
+
+</html>

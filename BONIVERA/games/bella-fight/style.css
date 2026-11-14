@@ -1,0 +1,56 @@
+html,body.bf-body{height:100%;margin:0;overflow:hidden;overscroll-behavior:none;background:#0a1326}
+.bf-body::after{display:none}
+.bf-stage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 40%,#183a73,#0a1326);touch-action:none;user-select:none;-webkit-user-select:none}
+#bf-canvas{display:block;touch-action:none;background:#27406b;image-rendering:pixelated;box-shadow:0 0 0 4px var(--light),0 0 0 8px #07101f}
+.bf-top{position:absolute;top:calc(10px + env(safe-area-inset-top));z-index:3}
+.bf-pause{right:calc(10px + env(safe-area-inset-right))}.bf-mute{right:calc(64px + env(safe-area-inset-right))}.bf-help{right:calc(114px + env(safe-area-inset-right))}
+.bf-items{position:absolute;left:calc(10px + env(safe-area-inset-left));top:calc(10px + env(safe-area-inset-top));display:flex;gap:10px;z-index:3}
+.bf-ib{position:relative;width:52px;height:52px;border-radius:6px;border:3px solid #07101f;background:var(--panel2);color:var(--light);font:400 .9rem/1 var(--px);box-shadow:0 4px 0 #07101f;cursor:pointer;touch-action:none}
+.bf-ib:active{transform:translateY(3px);box-shadow:0 1px 0 #07101f}.bf-ib:disabled{opacity:.4}
+.bf-ib.is-active{background:var(--gold);color:#1a1405;outline:3px dashed #1a1405;outline-offset:-7px}
+.bf-ib .q,.bf-ib .c{position:absolute;min-width:22px;height:20px;border:2px solid #07101f;border-radius:4px;font:400 .5rem var(--px);display:flex;align-items:center;justify-content:center;padding:0 3px}
+.bf-ib .q{right:-6px;bottom:-6px;background:var(--light);color:#07101f}.bf-ib .c{left:-6px;bottom:-6px;background:var(--gold);color:#1a1405}
+.bf-ib .k{position:absolute;left:4px;top:3px;font-size:.45rem;opacity:.7}
+.bf-touch{display:none;position:absolute;left:calc(10px + env(safe-area-inset-left));right:calc(10px + env(safe-area-inset-right));bottom:calc(10px + env(safe-area-inset-bottom));justify-content:space-between;align-items:flex-end;z-index:3;pointer-events:none}
+.bf-cluster{display:flex;gap:10px;pointer-events:auto;flex-wrap:wrap;justify-content:flex-end;max-width:54vw}
+.bf-pad{width:64px;height:64px;padding:0;font-size:1.3rem;touch-action:none;-webkit-touch-callout:none;font-family:var(--ui)}
+@media (pointer:coarse),(max-width:760px){.bf-playing .bf-touch{display:flex}}
+.bf-row{display:grid;grid-template-columns:1fr auto;gap:6px 10px;text-align:left;background:#0a1b36;border:3px solid var(--line);border-radius:6px;padding:10px;margin:10px 0}
+.bf-row b{font:400 .62rem/1.4 var(--px);color:var(--light)}.bf-row span{font-size:.8rem;color:var(--gold)}
+.bf-row p{grid-column:1/-1;margin:0;font-size:.82rem;color:var(--muted)}
+.bf-row .arcade-row{margin:0;grid-column:1/-1;justify-content:flex-start}
+@media (pointer:coarse),(max-width:760px){.bf-mute{right:calc(74px + env(safe-area-inset-right))}.bf-help{right:calc(138px + env(safe-area-inset-right))}.bf-items{gap:14px}.bf-ib{width:60px;height:60px;font-size:1.05rem}.bf-pad{width:76px;height:76px;font-size:1.5rem}.bf-cluster{gap:12px}}
+
+/* ==================================================================
+   FIX MOBILE — kolom pilih stage muat di layar
+   Letakkan di paling bawah file.
+   - Dialog menu tidak melebihi lebar layar
+   - Baris "Stage" (label + dropdown) boleh membungkus, tidak meluber
+   - Dropdown #bf-stage-pick selalu selebar baris dan tidak terpotong
+   - font-size 16px mencegah iOS zoom otomatis saat dropdown disentuh
+   ================================================================== */
+@media (pointer:coarse),(max-width:760px){
+  #bf-menu .arcade-dialog{
+    box-sizing:border-box;
+    max-width:calc(100vw - 24px);
+  }
+  #bf-menu .arcade-kv{
+    flex-wrap:wrap;
+    gap:6px 10px;
+    min-width:0;
+  }
+  #bf-menu .arcade-kv b{
+    flex:1 1 100%;
+    min-width:0;
+    max-width:100%;
+  }
+  #bf-stage-pick{
+    box-sizing:border-box;
+    display:block;
+    width:100%;
+    min-width:0;
+    max-width:100%;
+    font-size:16px;
+    text-overflow:ellipsis;
+  }
+}

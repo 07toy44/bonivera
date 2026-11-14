@@ -1,0 +1,744 @@
+/* ============================================================
+   BONIVERA — RECAP PAGE STYLES (rombak total)
+   Palette: ice #BFD7F1 · steel #7A9BBE · deep #3E5E8C
+   Isi: 0 Tokens · 1 Background · 2 Hero · 3 Filter · 4 Timeline
+        5 Modal · 6 Reduced motion
+   Konsep: header + filter + timeline = SATU permukaan menyatu
+   (tanpa band/section beda warna), filter = satu capsule berbingkai
+   gradasi yang jadi satu-satunya elemen "eye-catching".
+   ============================================================ */
+
+/* ---------------- 0. TOKENS ---------------- */
+:root {
+  --recap-deep: #3e5e8c;
+  --recap-tint: rgba(191, 215, 241, 0.32);
+  --recap-tint-strong: rgba(62, 94, 140, 0.13);
+  --recap-shadow-lg: 0 18px 40px rgba(27, 42, 62, 0.2);
+  --recap-ctl-h: 32px;
+}
+
+/* ---------------- 1. BACKGROUND (menyatu, bergerak sangat pelan) ---------------- */
+body[data-page="recap"]::before {
+  content: "";
+  position: fixed;
+  inset: -20%;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    radial-gradient(40% 36% at 14% 14%, rgba(191, 215, 241, 0.60), transparent 70%),
+    radial-gradient(36% 34% at 88% 30%, rgba(122, 155, 190, 0.20), transparent 70%),
+    radial-gradient(40% 36% at 20% 84%, rgba(191, 215, 241, 0.42), transparent 70%),
+    radial-gradient(34% 32% at 82% 92%, rgba(122, 155, 190, 0.16), transparent 70%);
+  animation: recapDrift 40s ease-in-out infinite alternate;
+}
+/* pola titik halus di atas aurora, memudar ke tepi */
+body[data-page="recap"]::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: radial-gradient(rgba(62, 94, 140, 0.07) 1px, transparent 1.4px);
+  background-size: 26px 26px;
+  -webkit-mask-image: radial-gradient(ellipse at 50% 35%, #000 25%, transparent 75%);
+  mask-image: radial-gradient(ellipse at 50% 35%, #000 25%, transparent 75%);
+}
+@keyframes recapDrift {
+  from { transform: translate3d(-2%, -1%, 0) scale(1); }
+  to   { transform: translate3d(2%, 2%, 0) scale(1.06); }
+}
+
+/* ---------------- 2. HERO (transparan = menyatu dengan halaman) ---------------- */
+body[data-page="recap"] .page-header,
+body[data-page="recap"] .recap-section {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+body[data-page="recap"] main { padding-top: 0; margin-top: 0; }
+body[data-page="recap"] .page-header {
+  position: relative;
+  text-align: center;
+  min-height: 0;
+  margin: 0;
+  /* ubah angka pertama untuk mendekatkan / menjauhkan dari navbar */
+  padding: 64px 0 20px;
+}
+body[data-page="recap"] .page-header::before,
+body[data-page="recap"] .page-header::after { content: none; }
+body[data-page="recap"] .page-header__inner {
+  min-height: 0;
+  margin-top: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+body[data-page="recap"] .page-header__inner > :first-child { margin-top: 0; }
+
+body[data-page="recap"] .page-header .eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0 0 16px;
+  padding: 6px 15px;
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: var(--recap-deep);
+  background: var(--recap-tint);
+  border: 1px solid rgba(122, 155, 190, 0.45);
+  border-radius: 999px;
+}
+/* titik "live": berkedip + gelombang cincin yang memancar */
+body[data-page="recap"] .page-header .eyebrow::before {
+  content: "";
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--recap-deep);
+  animation: recapDot 1.6s ease-in-out infinite;
+}
+@keyframes recapDot {
+  0%   { transform: scale(1);   opacity: 1;    box-shadow: 0 0 0 0 rgba(62, 94, 140, 0.55); }
+  45%  { transform: scale(0.8); opacity: 0.45; }
+  70%  { transform: scale(1);   opacity: 1;    box-shadow: 0 0 0 9px rgba(62, 94, 140, 0); }
+  100% { transform: scale(1);   opacity: 1;    box-shadow: 0 0 0 0 rgba(62, 94, 140, 0); }
+}
+body[data-page="recap"] .page-header__title {
+  margin: 0 0 14px;
+  font-size: clamp(2.1rem, 6vw, 3.4rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+body[data-page="recap"] .page-header__lede {
+  max-width: 520px;
+  margin: 0 auto;
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--ink-soft);
+}
+body[data-page="recap"] .recap-section { padding-top: 0; }
+
+/* ---------------- 3. FILTER — capsule ---------------- */
+/* position + z-index WAJIB: dropdown harus berada di atas timeline */
+.recap-controls {
+  position: relative;
+  z-index: 30;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 10px;
+  margin: 0 0 26px;
+  padding: 7px 8px;
+  border: 1.5px solid transparent;
+  border-radius: 22px;
+  /* isi putih lembut + bingkai gradasi yang mengalir pelan */
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)) padding-box,
+    linear-gradient(110deg, #bfd7f1, #7a9bbe, #3e5e8c, #7a9bbe, #bfd7f1) border-box;
+  background-size: auto, 300% 100%;
+  box-shadow:
+    0 10px 28px rgba(62, 94, 140, 0.14),
+    0 0 0 6px rgba(191, 215, 241, 0.2);
+  animation: recapBorder 9s linear infinite;
+}
+@keyframes recapBorder {
+  to { background-position: 0 0, 300% 0; }
+}
+/* transform dari .reveal akan "menjebak" panel fixed di mobile → matikan untuk bar ini */
+body[data-page="recap"] .recap-controls.reveal { transform: none; }
+
+.recap-filters,
+.recap-date,
+.recap-sort {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.recap-filters { flex: 1; min-width: 0; flex-wrap: wrap; }
+.recap-date {
+  padding-left: 12px;
+  border-left: 1px solid var(--line-soft);
+}
+.recap-sort {
+  margin-left: auto;
+  padding-left: 12px;
+  border-left: 1px solid var(--line-soft);
+}
+/* teks label diganti ikon kecil */
+.recap-date__label,
+.recap-sort__label { display: none; }
+.recap-date::before,
+.recap-sort::before {
+  content: "";
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+.recap-date::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237A9BBE' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='5' width='18' height='16' rx='3'/%3E%3Cpath d='M3 10h18M8 3v4M16 3v4'/%3E%3C/svg%3E");
+}
+.recap-sort::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237A9BBE' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 4v16m0 0l-3-3m3 3l3-3M17 20V4m0 0l-3 3m3-3l3 3'/%3E%3C/svg%3E");
+}
+
+/* ---- Chip seragam: tombol filter, select tanggal, sort, reset ---- */
+.recap-filter__toggle,
+.recap-sort__select,
+.recap-reset {
+  min-height: var(--recap-ctl-h);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--ink);
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background-color: var(--recap-tint);
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+.recap-filter__toggle:hover,
+.recap-sort__select:hover {
+  background-color: rgba(191, 215, 241, 0.55);
+  border-color: rgba(122, 155, 190, 0.55);
+}
+.recap-filter__toggle:focus-visible,
+.recap-sort__select:focus-visible,
+.recap-reset:focus-visible,
+.check input:focus-visible {
+  outline: 2px solid var(--steel-blue);
+  outline-offset: 2px;
+}
+
+.recap-filter { position: relative; flex-shrink: 0; }
+.recap-filter[hidden] { display: none; }
+
+.recap-filter__toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 4px 12px;
+}
+.recap-filter__toggle > span:first-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* ikon kecil di depan tombol filter */
+.recap-filter__toggle::before {
+  content: "";
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+#recapFilterToggle::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233E5E8C' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M4 7h10M18 7h2M4 17h2M10 17h10'/%3E%3Ccircle cx='16' cy='7' r='2'/%3E%3Ccircle cx='8' cy='17' r='2'/%3E%3C/svg%3E");
+}
+#setlistFilterToggle::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233E5E8C' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 18V6l11-2v12'/%3E%3Ccircle cx='6.5' cy='18' r='2.5'/%3E%3Ccircle cx='17.5' cy='16' r='2.5'/%3E%3C/svg%3E");
+}
+.recap-filter__arrow {
+  margin-left: auto;
+  color: var(--steel-blue);
+  font-size: 0.8em;
+  transition: transform 0.2s ease;
+}
+.recap-filter.is-open .recap-filter__arrow { transform: rotate(180deg); }
+
+.recap-sort__select {
+  padding: 4px 26px 4px 12px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%237A9BBE' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* aktif: dibuka / ada pilihan → tint biru tua lembut + cincin tipis */
+.recap-filter.is-open .recap-filter__toggle,
+.recap-filter.has-value .recap-filter__toggle,
+.recap-date .recap-sort__select:has(option:checked:not([value=""])) {
+  background-color: var(--recap-tint-strong);
+  border-color: var(--steel-blue);
+  color: var(--recap-deep);
+}
+
+/* ---- Panel dropdown (desktop: menggantung di bawah chip) ---- */
+.recap-filter__panel {
+  display: none;
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 100;
+  min-width: 100%;
+  max-width: calc(100vw - 40px);
+  max-height: 280px;
+  overflow-y: auto;
+  padding: 6px;
+  flex-direction: column;
+  gap: 1px;
+  background: var(--white);
+  border: 1px solid var(--line-soft);
+  border-radius: 14px;
+  box-shadow: var(--recap-shadow-lg);
+  transform-origin: top left;
+}
+.recap-filter.is-open .recap-filter__panel {
+  display: flex;
+  animation: recapPop 0.16s ease-out;
+}
+@keyframes recapPop {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ---- Checkbox ---- */
+.check {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 7px 10px;
+  border-radius: 9px;
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--ink);
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+}
+.check:hover { background: var(--bg-alt); }
+.check input {
+  -webkit-appearance: none;
+  appearance: none;
+  display: grid;
+  place-content: center;
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  border: 2px solid var(--line-soft);
+  border-radius: 5px;
+  background: var(--white);
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+.check input::after {
+  content: "";
+  width: 8px;
+  height: 4px;
+  border-left: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+  transform: rotate(-45deg) translate(1px, -1px);
+  opacity: 0;
+}
+.check input:checked { background: var(--recap-deep); border-color: var(--recap-deep); }
+.check input:checked::after { opacity: 1; }
+
+/* ---- Icon setlist (opsi filter & tombol toggle) ---- */
+.check__icon,
+.recap-filter__icon {
+  flex-shrink: 0;
+  display: block;
+  object-fit: cover;
+  background: var(--bg-alt);
+}
+.check__icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 7px;
+  border: 1px solid var(--line-soft);
+}
+.check:has(input:checked) .check__icon { border-color: var(--steel-blue); }
+.recap-filter__value { display: inline-flex; align-items: center; gap: 7px; min-width: 0; }
+.recap-filter__icon {
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
+  border: 1px solid var(--line-soft);
+}
+
+/* ---- Reset + jumlah hasil ---- */
+.recap-reset {
+  padding: 4px 12px;
+  font-size: 0.76rem;
+  color: var(--steel-blue);
+  border: 1px dashed var(--steel-blue);
+  background: transparent;
+}
+.recap-reset:hover { background-color: rgba(191, 215, 241, 0.4); }
+.recap-reset[hidden] { display: none; }
+
+.recap-result-count {
+  display: inline-block;
+  margin: -8px 0 20px 4px;
+  padding: 4px 12px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--recap-deep);
+  background: var(--recap-tint);
+  border-radius: 999px;
+}
+.recap-result-count:empty { display: none; }
+
+/* ---- Mobile: satu baris chip yang bisa digeser + panel jadi bottom sheet ---- */
+@media (max-width: 640px) {
+  :root { --recap-ctl-h: 30px; }
+
+  .recap-controls {
+    flex-wrap: nowrap;
+    gap: 8px;
+    margin-bottom: 14px;
+    padding: 6px;
+    border-radius: 18px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .recap-controls::-webkit-scrollbar { display: none; }
+
+  .recap-filters { flex: none; flex-wrap: nowrap; }
+  .recap-date,
+  .recap-sort { flex: none; margin-left: 0; padding-left: 8px; }
+  .recap-filter__toggle,
+  .recap-sort__select,
+  .recap-reset { flex-shrink: 0; white-space: nowrap; font-size: 0.74rem; }
+  .recap-filter__toggle { padding: 3px 10px; gap: 6px; }
+  .recap-sort__select { padding: 3px 22px 3px 10px; background-position: right 8px center; }
+
+  /* panel = bottom sheet; dim latar lewat box-shadow raksasa */
+  .recap-filter__panel {
+    position: fixed;
+    left: 10px;
+    right: 10px;
+    top: auto;
+    bottom: 10px;
+    z-index: 1000;
+    min-width: 0;
+    max-width: none;
+    max-height: 58vh;
+    padding: 8px 8px 10px;
+    border-radius: 20px;
+    box-shadow: 0 0 0 100vmax rgba(27, 42, 62, 0.35), var(--recap-shadow-lg);
+    transform-origin: bottom center;
+  }
+  .recap-filter__panel::before {
+    content: "";
+    flex-shrink: 0;
+    width: 38px;
+    height: 4px;
+    margin: 2px auto 8px;
+    border-radius: 4px;
+    background: var(--line-soft);
+  }
+  .recap-filter.is-open .recap-filter__panel { animation: recapSheet 0.2s ease-out; }
+  .check { padding: 10px 12px; font-size: 0.9rem; }
+  .check__icon { width: 26px; height: 26px; }
+
+  .recap-result-count { margin: -4px 0 14px 2px; font-size: 0.74rem; }
+}
+@keyframes recapSheet {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ---- Dropdown Day / Month / Year / Sort bergaya (sama seperti panel kategori) ----
+   Pakai "customizable select" (appearance: base-select) → Chrome/Edge terbaru.
+   Browser yang belum mendukung otomatis memakai dropdown bawaan + panah lama. */
+@supports (appearance: base-select) {
+  .recap-sort__select,
+  .recap-sort__select::picker(select) { appearance: base-select; }
+
+  .recap-sort__select {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 11px 4px 12px;
+    background-image: none;           /* panah lama diganti ::picker-icon */
+  }
+  .recap-sort__select::picker-icon {
+    content: "▾";
+    margin-left: auto;
+    color: var(--steel-blue);
+    font-size: 0.8em;
+    transition: transform 0.2s ease;
+  }
+  .recap-sort__select:open::picker-icon { transform: rotate(180deg); }
+  .recap-sort__select:open {
+    background-color: var(--recap-tint-strong);
+    border-color: var(--steel-blue);
+    color: var(--recap-deep);
+  }
+
+  /* kotak daftar pilihan */
+  .recap-sort__select::picker(select) {
+    min-width: anchor-size(width);
+    max-height: 280px;
+    margin-top: 8px;
+    padding: 6px;
+    background: var(--white);
+    border: 1px solid var(--line-soft);
+    border-radius: 14px;
+    box-shadow: var(--recap-shadow-lg);
+    /* animasi buka */
+    opacity: 0;
+    transform: translateY(-4px);
+    transition: opacity 0.16s ease, transform 0.16s ease,
+                overlay 0.16s allow-discrete, display 0.16s allow-discrete;
+  }
+  .recap-sort__select::picker(select):popover-open { opacity: 1; transform: none; }
+  @starting-style {
+    .recap-sort__select::picker(select):popover-open { opacity: 0; transform: translateY(-4px); }
+  }
+
+  /* tiap opsi */
+  .recap-sort__select option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    border-radius: 9px;
+    font-size: 0.84rem;
+    font-weight: 600;
+    color: var(--ink);
+    white-space: nowrap;
+    cursor: pointer;
+  }
+  .recap-sort__select option:hover,
+  .recap-sort__select option:focus-visible { background: var(--bg-alt); outline: 0; }
+  .recap-sort__select option:checked {
+    background: var(--recap-tint-strong);
+    color: var(--recap-deep);
+    font-weight: 800;
+  }
+  .recap-sort__select option[value=""] { color: var(--ink-faint); }
+  /* centang di kanan opsi terpilih */
+  .recap-sort__select option::checkmark {
+    order: 1;
+    margin-left: auto;
+    content: "✓";
+    color: var(--recap-deep);
+  }
+}
+
+@media (max-width: 640px) {
+  @supports (appearance: base-select) {
+    .recap-sort__select { padding: 3px 10px; }
+    .recap-sort__select option { padding: 10px 12px; font-size: 0.9rem; }
+  }
+}
+
+/* ---------------- 4. TIMELINE ---------------- */
+.timeline {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  padding-left: 34px;
+}
+.timeline::before {
+  content: "";
+  position: absolute;
+  left: 7px; top: 6px; bottom: 6px;
+  width: 3px;
+  background: linear-gradient(var(--ice-blue), rgba(122, 155, 190, 0.5), transparent);
+  border-radius: 3px;
+}
+
+.timeline__item { position: relative; }
+.timeline__node {
+  position: absolute;
+  left: -34px; top: 26px;
+  width: 17px; height: 17px;
+  border-radius: 50%;
+  background: var(--white);
+  border: 3px solid var(--steel-blue);
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.6);
+  transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+.timeline__item:hover .timeline__node {
+  background: var(--steel-blue);
+  transform: scale(1.2);
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.6), 0 0 0 8px rgba(122, 155, 190, 0.3);
+}
+
+.timeline__card {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  text-align: left;
+  padding: 22px 26px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid var(--line-soft);
+  border-radius: 20px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.timeline__card::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 4px;
+  background: var(--steel-blue);
+  opacity: 0.45;
+  transition: opacity 0.2s ease, width 0.2s ease;
+}
+.timeline__card:hover {
+  transform: translateY(-3px);
+  border-color: var(--steel-blue);
+  box-shadow: 0 12px 28px rgba(62, 94, 140, 0.14);
+}
+.timeline__card:hover::before { opacity: 1; width: 6px; }
+.timeline__card:focus-visible { outline: 2px solid var(--steel-blue); outline-offset: 3px; }
+
+.timeline__card-main {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  flex: 1;
+}
+.timeline__card-top { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.timeline__title { font-size: 1.14rem; margin-top: 4px; }
+.timeline__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  font-size: 0.86rem;
+  color: var(--ink-soft);
+}
+.timeline__meta span { display: inline-flex; align-items: center; gap: 6px; }
+
+.timeline__thumb {
+  flex-shrink: 0;
+  width: 84px;
+  height: 84px;
+  border-radius: var(--r-sm);
+  overflow: hidden;
+  border: 1px solid var(--line-soft);
+  background: var(--bg-alt);
+}
+.timeline__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform var(--t-med);
+}
+.timeline__card:hover .timeline__thumb img { transform: scale(1.08); }
+
+@media (max-width: 560px) {
+  .timeline { padding-left: 26px; }
+  .timeline__node { left: -26px; }
+  .timeline__card { padding: 18px; }
+  .timeline__thumb { width: 64px; height: 64px; }
+}
+
+/* ---------------- 5. MODAL (wide variant for recap) ---------------- */
+.modal--wide { max-width: 700px; }
+
+.recap-modal__heading {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 4px;
+}
+.recap-modal__logo {
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  border-radius: var(--r-sm);
+  overflow: hidden;
+  object-fit: cover;
+  border: 1px solid var(--line-soft);
+  background: var(--bg-alt);
+}
+.recap-modal__subhead {
+  font-size: 0.98rem;
+  margin-top: 26px;
+  margin-bottom: 12px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line-soft);
+}
+
+.song-list { display: flex; flex-direction: column; gap: 8px; }
+.song-list li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 16px;
+  background: var(--bg-alt);
+  border-left: 3px solid var(--ice-blue);
+  border-radius: var(--r-sm);
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+.song-list .song-note {
+  background: transparent;
+  border-left: 0;
+  color: var(--ink-faint);
+  font-style: italic;
+  font-weight: 400;
+  padding-left: 0;
+}
+
+.doc-thumbs {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: 10px;
+}
+.doc-thumb {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  border-radius: var(--r-sm);
+  overflow: hidden;
+  cursor: pointer;
+  border: none;
+  padding: 0;
+}
+.doc-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--t-med);
+}
+.doc-thumb:hover img { transform: scale(1.08); }
+.doc-thumb::after {
+  content: "⤢";
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(27, 42, 62, 0.28);
+  color: #fff;
+  font-size: 1.2rem;
+  opacity: 0;
+  transition: opacity var(--t-fast);
+}
+.doc-thumb:hover::after,
+.doc-thumb:focus-visible::after { opacity: 1; }
+
+/* ---------------- 6. REDUCED MOTION ---------------- */
+@media (prefers-reduced-motion: reduce) {
+  body[data-page="recap"]::before,
+  body[data-page="recap"] .page-header .eyebrow::before,
+  .recap-controls,
+  .recap-filter.is-open .recap-filter__panel { animation: none; }
+  .recap-filter__toggle,
+  .recap-sort__select,
+  .timeline__card,
+  .timeline__node,
+  .timeline__thumb img,
+  .doc-thumb img { transition: none; }
+  .timeline__card:hover { transform: none; }
+}

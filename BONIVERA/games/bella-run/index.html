@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Bella Run — BONIVERA ARCADE</title>
+<link rel="stylesheet" href="../arcade.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="arcade-body br-body">
+<div class="br-stage" id="br-stage">
+    <canvas id="br-canvas" role="img" aria-label="Area permainan Bella Run"></canvas>
+    <div class="br-hud" id="br-hud">
+      <span class="br-chip">Skor <b id="br-score">0</b></span><span class="br-chip">Best <b id="br-best">0</b></span><span class="br-chip">Coin <b id="br-coins">0</b></span>
+    </div>
+    <button class="br-pause br-help" data-help type="button" aria-label="Tutorial">❓</button>
+    <button class="br-pause br-mute" id="br-mute" type="button"></button>
+    <button class="br-pause" id="br-pause" type="button" aria-label="Pause">⏸</button>
+    <div class="br-items" id="br-items" aria-label="Item perlindungan"></div>
+
+    <div class="arcade-overlay" id="br-menu"><div class="arcade-dialog">
+      <h2>Bella Run</h2>
+      <p class="arcade-note">Bella berlari otomatis. Kamu hanya perlu melompat! Aktifkan perisai saat dibutuhkan.</p>
+      <div class="arcade-kv"><span>Highscore</span><b id="br-m-best">0</b></div>
+      <div class="arcade-kv"><span>Wallet</span><b id="br-m-wallet">0</b></div>
+      <div class="arcade-kv"><span>Item dimiliki</span><b id="br-m-items">-</b></div>
+      <div class="arcade-row"><button class="arcade-btn" id="br-start" type="button">MULAI</button><button class="arcade-btn is-ghost" data-spin type="button">🎡 SPIN HARIAN</button><button class="arcade-btn is-ghost" data-shop type="button">SHOP</button><button class="arcade-btn is-ghost" data-help type="button">❓ TUTORIAL</button></div>
+      <p class="arcade-note">Lompat: Spasi / W / ↑ / klik / sentuh layar (tahan = lompat terus). Item: tombol 1, 2, 3. Pause: Esc.</p>
+      <div class="arcade-row"><a class="arcade-btn is-ghost" data-nav="game" href="../arcade.html">BACK TO GAME HOME</a><a class="arcade-btn is-ghost" data-nav="site" href="../../index.html">BACK TO WEBSITE HOME</a></div>
+    </div></div>
+
+    <div class="arcade-overlay" id="br-shop" hidden><div class="arcade-dialog">
+      <h2>Shop & Inventory</h2>
+      <p class="arcade-note">Wallet: <b id="br-s-wallet">0</b> coin. Item dipakai saat game berjalan lewat ikon di dalam game.</p>
+      <div id="br-shop-list"></div>
+      <div class="arcade-row"><button class="arcade-btn" id="br-shop-close" type="button">KEMBALI</button></div>
+    </div></div>
+
+    <div class="arcade-overlay" id="br-spin" hidden><div class="arcade-dialog">
+      <h2>🎡 Spin Harian</h2>
+      <div class="br-wheel-wrap"><div class="br-pointer" aria-hidden="true">▼</div><canvas id="br-wheel" width="320" height="320" role="img" aria-label="Roda hadiah"></canvas></div>
+      <p class="arcade-note" id="br-spin-status"></p>
+      <p class="arcade-note" id="br-spin-reset"></p>
+      <p id="br-spin-result" class="br-result" role="status" aria-live="polite"></p>
+      <div class="arcade-row"><button class="arcade-btn" id="br-spin-go" type="button">PUTAR & KLAIM</button><button class="arcade-btn is-ghost" id="br-spin-close" type="button">TUTUP</button></div>
+      <p class="arcade-note">Peluang: Common 60% · Rare 25% · Epic 11% · Legend 4%</p>
+    </div></div>
+
+    <div class="arcade-overlay" id="br-pause-menu" hidden><div class="arcade-dialog"><h2>Jeda</h2>
+      <div class="arcade-row"><button class="arcade-btn" id="br-resume" type="button">LANJUT</button><button class="arcade-btn is-ghost" id="br-quit" type="button">AKHIRI RUN</button></div>
+    </div></div>
+
+    <div class="arcade-overlay" id="br-over" hidden><div class="arcade-dialog"><h2>GAME OVER</h2>
+      <p id="br-over-reason" class="arcade-note"></p>
+      <div class="arcade-kv"><span>Skor</span><b id="br-o-score">0</b></div>
+      <div class="arcade-kv"><span>Highscore</span><b id="br-o-best">0</b></div>
+      <div class="arcade-kv"><span>Coin didapat</span><b id="br-o-coins">0</b></div>
+      <p id="br-o-new" class="arcade-note" hidden><b>★ Highscore baru!</b></p>
+      <div class="arcade-row">
+        <button class="arcade-btn" id="br-again" type="button">PLAY AGAIN</button>
+        <button class="arcade-btn is-ghost" data-spin type="button">🎡 SPIN</button>
+        <button class="arcade-btn is-ghost" data-shop type="button">SHOP</button>
+        <a class="arcade-btn is-ghost" data-nav="game" href="../arcade.html">BACK TO GAME HOME</a>
+        <a class="arcade-btn is-ghost" data-nav="site" href="../../index.html">BACK TO WEBSITE HOME</a>
+      </div>
+    </div></div>
+</div>
+<script src="anti-inspect.js" defer></script>
+<script src="../games-registry.js"></script>
+<script src="../arcade-storage.js"></script>
+<script src="../arcade-audio.js"></script>
+<script src="../arcade-tutorial.js"></script>
+<script src="../arcade-sprites.js"></script>
+<script src="game.js"></script>
+</body>
+</html>

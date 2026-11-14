@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>StyleBell — BONIVERA ARCADE</title>
+<link rel="stylesheet" href="../arcade.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="arcade-body sb-body">
+<main class="sb-screen">
+  <div class="sb-top">
+    <div class="arcade-logo">STYLEBELL</div>
+    <div class="sb-btns">
+      <button class="arcade-iconbtn" id="sb-menu-btn" type="button" aria-label="Menu">☰</button>
+      <button class="arcade-iconbtn" id="sb-help-btn" type="button" aria-label="Tutorial">❓</button>
+    </div>
+  </div>
+  <div class="sb-layout">
+    <section class="sb-stage" aria-label="Pratinjau karakter">
+      <canvas id="sb-canvas" width="1600" height="1200" role="img" aria-label="Pratinjau karakter Bella"></canvas>
+      <div class="sb-loading" id="sb-loading" role="status">Memuat aset…</div>
+    </section>
+    <section class="sb-panel" aria-label="Kustomisasi">
+      <div class="sb-tabs" id="sb-tabs" role="tablist" aria-label="Kategori"></div>
+      <div class="sb-opts" id="sb-opts" role="tabpanel"></div>
+      <div class="sb-actions">
+        <label class="arcade-check sb-trans"><input type="checkbox" id="sb-transparent"><span>Background transparan (PNG)</span></label>
+        <div class="arcade-row">
+          <button class="arcade-btn is-ghost" id="sb-reset" type="button">RESET</button>
+          <button class="arcade-btn" id="sb-download" type="button" disabled>DOWNLOAD PNG</button>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<div class="arcade-overlay" id="sb-menu" hidden role="dialog" aria-modal="true" aria-labelledby="sb-menu-t"><div class="arcade-dialog">
+  <h2 id="sb-menu-t">STYLEBELL</h2>
+  <p class="arcade-note">Dress-up karakter Bella: ekspresi, pose, outfit, warna celana, dan background — lalu unduh sebagai PNG.</p>
+  <div class="arcade-row"><button class="arcade-btn" id="sb-menu-close" type="button">LANJUT KREASI</button></div>
+  <div class="arcade-row"><a class="arcade-btn is-ghost" data-nav="game" href="../arcade.html">BACK TO GAME HOME</a><a class="arcade-btn is-ghost" data-nav="site" href="../../index.html">BACK TO WEBSITE HOME</a></div>
+</div></div>
+
+<div class="arcade-overlay" id="sb-help" hidden role="dialog" aria-modal="true" aria-labelledby="sb-help-t"><div class="arcade-dialog">
+  <h2 id="sb-help-t">Tutorial — StyleBell</h2>
+  <ol class="arcade-steps">
+    <li><b>Pilih Pose.</b> Tiap pose punya badan, tangan, dan posisi pakaian sendiri.</li>
+    <li><b>Ganti Ekspresi.</b> Wajah bisa dipasang ke pose mana pun; pilih "Asli" untuk wajah bawaan pose.</li>
+    <li><b>Pakai Pakaian</b> lalu atur <b>warna celana</b> (palet atau pemilih warna bebas).</li>
+    <li><b>Latar &amp; Elemen.</b> Ganti Theater/Panggung/Polos dan tambahkan efek emosi.</li>
+    <li><b>Download PNG.</b> Hasil sama persis dengan pratinjau, lengkap watermark BoniveraArcade. Centang "transparan" untuk tanpa background.</li>
+  </ol>
+  <div class="arcade-row"><button class="arcade-btn" id="sb-help-close" type="button">MENGERTI</button></div>
+</div></div>
+
+<script src="../anti-inspect.js" defer></script>
+<script src="../games-registry.js"></script>
+<script src="assets/pack.js"></script>
+<script src="game.js"></script>
+
+
+<!-- =========================================================
+     BONIVERA — STYLEBELL NOTICE SYSTEM
+     DEVELOPMENT + AI ASSET TRANSPARENCY
+========================================================= -->
+
+<style>
+/* =========================================================
+   OVERLAY
+========================================================= */
+
+.sb-notice-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  box-sizing: border-box;
+
+  background: rgba(3, 9, 22, .82);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .25s ease, visibility .25s ease;
+}
+
+.sb-notice-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* =========================================================
+   POPUP CONTAINER
+========================================================= */
+
+.sb-notice {
+  position: relative;
+  width: min(100%, 410px);
+  max-height: calc(100dvh - 32px);
+  overflow-y: auto;
+  padding: 20px;
+  box-sizing: border-box;
+
+  background: var(--panel, #102747);
+  color: var(--light, #fff);
+
+  border: 4px solid var(--line, #07101f);
+  border-radius: 8px;
+
+  box-shadow:
+    0 6px 0 #07101f,
+    0 12px 0 rgba(0,0,0,.3);
+
+  font-family: var(--ui, sans-serif);
+
+  transform: translateY(18px) scale(.96);
+  transition: transform .3s ease;
+}
+
+.sb-notice-overlay.active .sb-notice {
+  transform: translateY(0) scale(1);
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.sb-notice::before {
+  content: "STYLEBELL";
+  display: block;
+
+  margin: -20px -20px 17px;
+  padding: 11px 15px;
+
+  background: var(--panel2, #17365e);
+  border-bottom: 3px solid var(--line, #07101f);
+
+  color: var(--gold, #ffd66b);
+
+  font: 400 .65rem/1.5 var(--px, monospace);
+  letter-spacing: 2px;
+  text-align: center;
+}
+
+/* =========================================================
+   CLOSE BUTTON
+========================================================= */
+
+.sb-notice-close {
+  position: absolute;
+  top: 5px;
+  right: 6px;
+  z-index: 2;
+
+  width: 29px;
+  height: 29px;
+  padding: 0;
+
+  border: 2px solid #07101f;
+  border-radius: 5px;
+
+  background: #a83d4b;
+  color: white;
+
+  font-size: 19px;
+  line-height: 1;
+
+  cursor: pointer;
+  transition: .2s;
+}
+
+.sb-notice-close:hover {
+  filter: brightness(1.2);
+  transform: scale(1.08);
+}
+
+/* =========================================================
+   DEVELOPMENT NOTICE — ANIMATED WARNING
+========================================================= */
+
+.sb-notice-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+
+  padding: 7px 9px;
+  margin-bottom: 13px;
+
+  border: 2px solid #07101f;
+  border-radius: 4px;
+
+  background: #f0b84e;
+  color: #201605;
+
+  font: 400 .48rem/1.5 var(--px, monospace);
+  letter-spacing: .5px;
+
+  animation: sbWarningBlink 1.3s infinite;
+  transform-origin: center;
+}
+
+@keyframes sbWarningBlink {
+  0%, 100% {
+    opacity: 1;
+    box-shadow: 0 0 0 rgba(255,214,107,0);
+    filter: brightness(1);
+  }
+
+  50% {
+    opacity: .65;
+    box-shadow: 0 0 13px rgba(255,214,107,.55);
+    filter: brightness(1.3);
+  }
+}
+
+/* =========================================================
+   TITLE
+========================================================= */
+
+.sb-notice h3 {
+  margin: 0 0 12px;
+
+  color: var(--light, #fff);
+
+  font: 400 .85rem/1.7 var(--px, monospace);
+}
+
+.sb-notice h3 span {
+  color: var(--gold, #ffd66b);
+}
+
+/* =========================================================
+   DESCRIPTION
+========================================================= */
+
+.sb-notice-description {
+  margin: 0;
+
+  color: var(--light, #fff);
+
+  font: 400 .78rem/1.8 var(--ui, sans-serif);
+}
+
+.sb-notice-description strong {
+  color: var(--gold, #ffd66b);
+}
+
+/* =========================================================
+   RELEASE INFORMATION
+========================================================= */
+
+.sb-release-info {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+
+  margin-top: 15px;
+  padding: 11px;
+
+  border: 2px dashed var(--gold, #ffd66b);
+  border-radius: 5px;
+
+  background: rgba(0,0,0,.15);
+}
+
+.sb-release-icon {
+  flex-shrink: 0;
+  font-size: 17px;
+}
+
+.sb-release-info p {
+  margin: 0;
+
+  color: var(--light, #fff);
+
+  font: 400 .73rem/1.7 var(--ui, sans-serif);
+}
+
+.sb-release-info strong {
+  color: var(--gold, #ffd66b);
+}
+
+/* =========================================================
+   AI & ASSET TRANSPARENCY
+========================================================= */
+
+.sb-asset-info {
+  position: relative;
+
+  margin-top: 12px;
+  padding: 11px;
+
+  border: 2px solid var(--gold, #ffd66b);
+  border-radius: 5px;
+
+  background: linear-gradient(
+    135deg,
+    rgba(255,214,107,.13),
+    rgba(0,0,0,.18)
+  );
+
+  box-shadow: inset 0 0 12px rgba(255,214,107,.06);
+}
+
+.sb-asset-title {
+  margin-bottom: 10px;
+
+  color: var(--gold, #ffd66b);
+
+  font: 400 .48rem/1.7 var(--px, monospace);
+  letter-spacing: .4px;
+}
+
+/* =========================================================
+   ORIGINAL CHARACTER ASSET BADGE
+========================================================= */
+
+.sb-original-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  margin-bottom: 10px;
+  padding: 6px 9px;
+
+  border: 2px solid var(--gold, #ffd66b);
+  border-radius: 4px;
+
+  background: rgba(255,214,107,.15);
+  color: var(--gold, #ffd66b);
+
+  font: 400 .46rem/1.5 var(--px, monospace);
+  letter-spacing: .3px;
+
+  animation: sbOriginalPulse 2s infinite;
+}
+
+.sb-original-check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 17px;
+  height: 17px;
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  background: var(--gold, #ffd66b);
+  color: #17243a;
+
+  font-size: 11px;
+  font-weight: 900;
+}
+
+@keyframes sbOriginalPulse {
+  0%, 100% {
+    box-shadow: 0 0 0 rgba(255,214,107,0);
+  }
+
+  50% {
+    box-shadow: 0 0 12px rgba(255,214,107,.3);
+  }
+}
+
+/* =========================================================
+   ORIGINAL ASSET STATEMENT
+========================================================= */
+
+.sb-original-statement {
+  display: block;
+
+  margin: 9px 0;
+  padding: 9px;
+
+  border-left: 4px solid var(--gold, #ffd66b);
+
+  background: rgba(255,214,107,.09);
+  color: #fff;
+
+  font: 700 .73rem/1.7 var(--ui, sans-serif);
+}
+
+.sb-original-statement strong {
+  color: var(--gold, #ffd66b);
+}
+
+/* =========================================================
+   AI DESCRIPTION
+========================================================= */
+
+.sb-asset-info p {
+  margin: 0 0 7px;
+
+  color: var(--light, #fff);
+
+  font: 400 .71rem/1.7 var(--ui, sans-serif);
+}
+
+.sb-asset-info p:last-child {
+  margin-bottom: 0;
+}
+
+.sb-asset-info p strong {
+  color: var(--gold, #ffd66b);
+}
+
+/* =========================================================
+   CONFIRM BUTTON
+========================================================= */
+
+.sb-notice-footer {
+  margin-top: 17px;
+}
+
+.sb-notice-button {
+  width: 100%;
+  min-height: 43px;
+  padding: 10px;
+
+  border: 3px solid #07101f;
+  border-bottom-width: 5px;
+  border-radius: 5px;
+
+  background: var(--gold, #ffd66b);
+  color: #1a1405;
+
+  font: 400 .52rem/1.5 var(--px, monospace);
+
+  cursor: pointer;
+  transition: .15s ease;
+}
+
+.sb-notice-button:hover {
+  filter: brightness(1.08);
+  transform: translateY(-2px);
+}
+
+.sb-notice-button:active {
+  transform: translateY(2px);
+  border-bottom-width: 3px;
+}
+
+/* =========================================================
+   SIGNATURE
+========================================================= */
+
+.sb-notice-signature {
+  margin-top: 15px;
+
+  color: var(--muted, #9aabc4);
+
+  font: 400 .42rem/1.6 var(--px, monospace);
+  letter-spacing: 1px;
+  text-align: center;
+}
+
+/* =========================================================
+   MOBILE RESPONSIVE
+========================================================= */
+
+@media (max-width: 480px) {
+  .sb-notice {
+    width: 100%;
+    padding: 16px;
+  }
+
+  .sb-notice::before {
+    margin: -16px -16px 14px;
+  }
+
+  .sb-notice-description {
+    font-size: .74rem;
+  }
+
+  .sb-release-info p {
+    font-size: .7rem;
+  }
+
+  .sb-asset-info p {
+    font-size: .69rem;
+  }
+}
+
+/* =========================================================
+   ACCESSIBILITY
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .sb-notice,
+  .sb-notice-overlay,
+  .sb-notice-button,
+  .sb-notice-label,
+  .sb-original-badge {
+    transition: none;
+    animation: none;
+  }
+}
+</style>
+
+
+<!-- =========================================================
+     POPUP STRUCTURE
+========================================================= -->
+
+<div class="sb-notice-overlay" id="sbNoticeOverlay">
+
+  <div class="sb-notice"
+       role="dialog"
+       aria-modal="true"
+       aria-labelledby="sbNoticeTitle">
+
+    <!-- CLOSE -->
+    <button class="sb-notice-close"
+            id="sbNoticeClose"
+            aria-label="Tutup">
+      &times;
+    </button>
+
+    <!-- WARNING LABEL -->
+    <div class="sb-notice-label">
+      ⚠ DEVELOPMENT NOTICE
+    </div>
+
+    <!-- TITLE -->
+    <h3 id="sbNoticeTitle">
+      STYLE<span>BELL</span> Update
+    </h3>
+
+    <!-- DEVELOPMENT DESCRIPTION -->
+    <p class="sb-notice-description">
+      STYLEBELL saat ini masih dalam tahap pengembangan.
+      Mohon maaf apabila masih ditemukan berbagai
+      <strong>error dan bug</strong>, terutama pada kombinasi
+      pakaian, pose, ekspresi, serta elemen permainan lainnya.
+
+      <br><br>
+
+      Kami masih membutuhkan waktu untuk melakukan
+      pengembangan, pengujian, dan perbaikan agar game
+      dapat berjalan lebih optimal.
+    </p>
+
+    <!-- RELEASE INFORMATION -->
+    <div class="sb-release-info">
+
+      <span class="sb-release-icon">🕒</span>
+
+      <p>
+        Untuk saat ini, <strong>jadwal full release
+        STYLEBELL belum dapat kami pastikan.</strong>
+        Terima kasih atas pengertian dan kesabarannya.
+      </p>
+
+    </div>
+
+    <!-- AI & ASSET TRANSPARENCY -->
+    <div class="sb-asset-info">
+
+      <div class="sb-asset-title">
+        ✦ AI & ASSET TRANSPARENCY
+      </div>
+
+      <!-- ORIGINAL ASSET MARK -->
+      <div class="sb-original-badge">
+        <span class="sb-original-check">✓</span>
+        ORIGINAL CHARACTER ASSET
+      </div>
+
+      <!-- ORIGINALITY STATEMENT -->
+      <div class="sb-original-statement">
+        Karakter Bella dalam STYLEBELL merupakan aset visual
+        yang dibuat khusus untuk game ini dan
+        <strong>tidak mengambil atau menggunakan aset karakter
+        milik pihak lain sebagai referensi</strong>
+      </div>
+
+      <!-- AI DISCLOSURE -->
+      <p>
+        Karakter Bella dan berbagai aset visual lainnya
+        merupakan hasil <strong>generasi AI</strong> dengan
+        menggunakan foto asli sebagai referensi visual.
+      </p>
+
+      <p>
+        Seluruh aset dikembangkan untuk kebutuhan STYLEBELL
+        sebagai bagian dari proyek game Bonivera.
+      </p>
+
+    </div>
+
+    <!-- CONFIRM BUTTON -->
+    <div class="sb-notice-footer">
+
+      <button class="sb-notice-button"
+              id="sbNoticeConfirm">
+        MENGERTI, LANJUT BERMAIN
+      </button>
+
+    </div>
+
+    <!-- SIGNATURE -->
+    <div class="sb-notice-signature">
+      BONIVERA TEAM
+    </div>
+
+  </div>
+</div>
+
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
+
+<script>
+(function () {
+  "use strict";
+
+  const overlay = document.getElementById("sbNoticeOverlay");
+  const closeBtn = document.getElementById("sbNoticeClose");
+  const confirmBtn = document.getElementById("sbNoticeConfirm");
+
+  if (!overlay || !closeBtn || !confirmBtn) return;
+
+  function openNotice() {
+    overlay.classList.add("active");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeNotice() {
+    overlay.classList.remove("active");
+    document.body.style.overflow = "";
+  }
+
+  // CLOSE BUTTON
+  closeBtn.addEventListener("click", closeNotice);
+
+  // CONFIRM BUTTON
+  confirmBtn.addEventListener("click", closeNotice);
+
+  // CLICK OUTSIDE
+  overlay.addEventListener("click", function (e) {
+    if (e.target === overlay) {
+      closeNotice();
+    }
+  });
+
+  // ESCAPE KEY
+  document.addEventListener("keydown", function (e) {
+    if (
+      e.key === "Escape" &&
+      overlay.classList.contains("active")
+    ) {
+      closeNotice();
+    }
+  });
+
+  // AUTO SHOW AFTER PAGE LOAD
+  function initNotice() {
+    setTimeout(openNotice, 500);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initNotice);
+  } else {
+    initNotice();
+  }
+
+})();
+</script>
+
+
+</body>
+</html>

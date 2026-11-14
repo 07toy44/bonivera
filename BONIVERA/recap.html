@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Recap — BONIVERA</title>
+<meta name="description" content="A timeline of everything Bella has completed — theater shows, offair events and broadcasts — with songs performed and photo documentation for each.">
+<meta name="theme-color" content="#3E5E8C">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Bella Recap — BONIVERA">
+<meta property="og:description" content="A timeline of Bella's completed activities, songs performed, and documentation.">
+<meta property="og:image" content="assets/images/bonivera/bonivera-logo.png">
+<meta name="twitter:card" content="summary">
+
+<link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png">
+<link rel="apple-touch-icon" href="assets/icons/favicon-180.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="assets/css/shared.css">
+<link rel="stylesheet" href="recap.css">
+</head>
+<body data-page="recap">
+<a href="#main" class="skip-link">Skip to content</a>
+
+<header class="navbar" id="navbar">
+  <div class="navbar__bg" aria-hidden="true"></div>
+  <div class="navbar__inner">
+    <a href="home.html" class="navbar__brand" aria-label="BONIVERA — Home">
+      <img src="assets/images/bonivera/bonivera-logo.png" alt="" class="navbar__logo" width="38" height="38">
+      <span class="navbar__wordmark">BONIVERA</span>
+    </a>
+    <nav class="navbar__nav" id="primaryNav" aria-label="Primary">
+      <a href="home.html" class="navbar__link" data-nav="home">Home</a>
+      <a href="about-bella.html" class="navbar__link" data-nav="about-bella">About Bella</a>
+      <a href="recap.html" class="navbar__link" data-nav="recap">Recap</a>
+      <a href="schedule.html" class="navbar__link" data-nav="schedule">Schedule</a>
+      <a href="documentation.html" class="navbar__link" data-nav="documentation">Bella Gallery</a>
+      <a href="bonivera-docs.html" class="navbar__link" data-nav="bonivera-docs">Bonivera Gallery</a>
+      <a href="bonivera.html" class="navbar__link" data-nav="bonivera">Bonivera Philosophy</a>
+
+      <!-- TAB BARU: ARCADE (style gaming khusus) -->
+      <a href="./games/arcade.html" class="navbar__link navbar__link--arcade" data-nav="arcade">
+        <svg class="navbar__arcade-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M7.5 7h9A5.5 5.5 0 0 1 22 12.5v1.2a3.3 3.3 0 0 1-5.9 2L14.8 14H9.2l-1.3 1.7a3.3 3.3 0 0 1-5.9-2v-1.2A5.5 5.5 0 0 1 7.5 7Zm.5 2.5v1.2H6.8v1.6H8v1.2h1.6v-1.2h1.2v-1.6H9.6V9.5H8Zm8.4.4a1 1 0 1 0 0 2 1 1 0 0 0 0-2Zm2.2 2.2a1 1 0 1 0 0 2 1 1 0 0 0 0-2Z"/>
+        </svg>
+        <span class="navbar__arcade-text">Arcade</span>
+      </a>
+    </nav>
+    <button class="navbar__toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="primaryNav">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="page-header">
+    <div class="container page-header__inner reveal">
+      <p class="eyebrow">The Journey So Far</p>
+      <h1 class="page-header__title">BELLA RECAP</h1>
+      <p class="page-header__lede">Every completed activity, in order — tap any moment for the full recap, setlist and documentation.</p>
+    </div>
+  </section>
+
+  <section class="section recap-section">
+    <div class="container container--narrow">
+
+      <div class="recap-controls reveal">
+
+        <div class="recap-filters">
+
+          <!-- FILTER 1: kategori (multi-select) -->
+          <div class="recap-filter" id="recapFilter">
+            <button
+              type="button"
+              class="recap-filter__toggle"
+              id="recapFilterToggle"
+              aria-expanded="false"
+              aria-controls="recapFilterPanel"
+            >
+              <span id="recapFilterLabel">All categories</span>
+              <span class="recap-filter__arrow" aria-hidden="true">▾</span>
+            </button>
+
+            <div class="recap-filter__panel" id="recapFilterPanel" role="group" aria-label="Filter recap by category">
+              <label class="check"><input type="checkbox" value="ALL" checked><span>All</span></label>
+              <label class="check"><input type="checkbox" value="THEATER"><span>Theater</span></label>
+              <label class="check"><input type="checkbox" value="OFF AIR EVENT"><span>Off Air Event</span></label>
+              <label class="check"><input type="checkbox" value="ON AIR EVENT"><span>On Air Event</span></label>
+              <label class="check"><input type="checkbox" value="OFC EVENT"><span>OFC Event</span></label>
+              <label class="check"><input type="checkbox" value="JKT48 EVENT"><span>JKT48 Event</span></label>
+            </div>
+          </div>
+
+          <!-- FILTER 2: sub filter setlist (hanya muncul jika THEATER dipilih) -->
+          <div class="recap-filter" id="setlistFilter" hidden>
+            <button
+              type="button"
+              class="recap-filter__toggle"
+              id="setlistFilterToggle"
+              aria-expanded="false"
+              aria-controls="setlistFilterPanel"
+            >
+              <span id="setlistFilterLabel">All setlists</span>
+              <span class="recap-filter__arrow" aria-hidden="true">▾</span>
+            </button>
+
+            <div class="recap-filter__panel" id="setlistFilterPanel" role="group" aria-label="Filter theater by setlist"></div>
+          </div>
+
+          <!-- FILTER 3: tanggal / bulan / tahun -->
+          <div class="recap-date" role="group" aria-label="Filter by date">
+            <span class="recap-date__label">Date</span>
+            <select id="recapDay" class="recap-sort__select" aria-label="Day">
+              <option value="">Day</option>
+            </select>
+            <select id="recapMonth" class="recap-sort__select" aria-label="Month">
+              <option value="">Month</option>
+            </select>
+            <select id="recapYear" class="recap-sort__select" aria-label="Year">
+              <option value="">Year</option>
+            </select>
+          </div>
+
+          <button type="button" class="recap-reset" id="recapReset" hidden>Reset filters</button>
+        </div>
+
+        <label class="recap-sort">
+          <span class="recap-sort__label">Sort</span>
+          <select id="recapSort" class="recap-sort__select">
+            <option value="newest">Newest first</option>
+            <option value="oldest">Oldest first</option>
+          </select>
+        </label>
+      </div>
+
+      <p class="recap-result-count" id="recapCount" aria-live="polite"></p>
+
+      <ol class="timeline" id="timeline"></ol>
+
+      <div class="empty-state" id="recapEmptyState" hidden>
+        <svg class="empty-state__icon" viewBox="0 0 64 64" width="52" height="52" aria-hidden="true"><path d="M32 12v20l14 8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="32" cy="32" r="22" fill="none" stroke="currentColor" stroke-width="2.4"/></svg>
+        <p id="recapEmptyText">No recaps yet — Bella's completed activities will appear here.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============================================================
+     BONIVERA — FOOTER
+============================================================ -->
+
+<footer class="site-footer">
+
+  <div class="site-footer__inner">
+
+    <div class="site-footer__brand">
+
+      <a
+        href="home.html"
+        class="site-footer__logo-link"
+        aria-label="BONIVERA Home"
+      >
+
+        <img
+          src="assets/images/bonivera/bonivera-logo.png"
+          alt="BONIVERA"
+          class="site-footer__logo"
+        >
+
+        <span>
+          BONIVERA
+        </span>
+
+      </a>
+
+      <p class="site-footer__brand-name">
+        Bella JKT48 Fansite
+      </p>
+
+      <p class="site-footer__tags">
+        #SkateToDream ·
+        #BellaGasTerus ·
+        #BellMorning ·
+        #BonNight ·
+        #BellDaily ·
+        #BellNGreat ·
+        #Bell2Gether ·
+        #ChrisTalkBella ·
+        #BellCerita ·
+        #BellAnswer
+      </p>
+
+    </div>
+
+    <nav
+      class="site-footer__nav"
+      aria-label="Footer Navigation"
+    >
+
+      <span class="site-footer__nav-title">
+        EXPLORE
+      </span>
+
+      <a href="home.html">
+        Home
+      </a>
+
+      <a href="about-bella.html">
+        About Bella
+      </a>
+
+      <a href="recap.html">
+        Recap
+      </a>
+
+      <a href="schedule.html">
+        Schedule
+      </a>
+
+      <a href="documentation.html">
+        Bella Gallery
+      </a>
+
+      <a href="bonivera-docs.html">
+        Bonivera Gallery
+      </a>
+
+      <a href="bonivera.html">
+        Bonivera Philosophy
+      </a>
+
+    </nav>
+
+    <div class="site-footer__social">
+
+      <span class="site-footer__social-title">
+        FOLLOW BONIVERA
+      </span>
+
+      <!-- INSTAGRAM @bonivera.cb -->
+      <a
+        href="https://www.instagram.com/bonivera.cb/"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="site-footer__social-link"
+        aria-label="Instagram BONIVERA"
+        title="Instagram — @bonivera.cb"
+      >
+
+        <svg
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <rect
+            x="3"
+            y="3"
+            width="18"
+            height="18"
+            rx="5"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+          />
+
+          <circle
+            cx="12"
+            cy="12"
+            r="4.2"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+          />
+
+          <circle
+            cx="17.4"
+            cy="6.7"
+            r="1.1"
+            fill="currentColor"
+          />
+        </svg>
+
+        <span>
+          Instagram
+        </span>
+
+      </a>
+
+      <!-- TIKTOK @bonivera.cb -->
+      <a
+        href="https://www.tiktok.com/@bonivera.cb"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="site-footer__social-link"
+        aria-label="TikTok BONIVERA"
+        title="TikTok — @bonivera.cb"
+      >
+
+        <svg
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path
+            d="M15.5 3c.35 2.1 1.55 3.45 3.5 3.8v3.05a7.7 7.7 0 0 1-3.48-1.08v6.1a6.13 6.13 0 1 1-5.3-6.08v3.1a3.05 3.05 0 1 0 2.25 2.95V3h3.03Z"
+            fill="currentColor"
+          />
+        </svg>
+
+        <span>
+          TikTok
+        </span>
+
+      </a>
+
+      <!-- X @bonivera_cb -->
+      <a
+        href="https://x.com/bonivera_cb"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="site-footer__social-link"
+        aria-label="X BONIVERA"
+        title="X — @bonivera_cb"
+      >
+
+        <svg
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path
+            d="M5 4h3.2l4.1 5.45L16.8 4H19l-5.65 6.65L19.5 20h-3.2l-4.55-6.05L6.5 20H4.3l5.95-7.1L5 4Zm3.05 1.6H7.1l8.9 12.8h.95l-8.9-12.8Z"
+            fill="currentColor"
+          />
+        </svg>
+
+        <span>
+          X
+        </span>
+
+      </a>
+
+    </div>
+
+  </div>
+
+  <div class="site-footer__bottom">
+
+    <div class="site-footer__bottom-inner">
+
+      <p class="site-footer__disclaimer">
+        BONIVERA is an independent fan community/fansite
+        and is not affiliated with JKT48 or its official management.
+      </p>
+
+      <p class="site-footer__copyright">
+        ©
+        <span id="bonivera-year">2026</span>
+        BONIVERA
+      </p>
+
+    </div>
+
+  </div>
+
+</footer>
+
+<!-- Recap detail modal -->
+<div class="modal-overlay" id="recapModal" aria-hidden="true">
+  <div class="modal modal--wide" role="dialog" aria-modal="true" aria-labelledby="recapModalTitle">
+    <button class="modal__close" data-modal-close aria-label="Close">
+      <svg viewBox="0 0 24 24" width="18" height="18"><path d="M5 5l14 14M19 5L5 19" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+    </button>
+    <div class="modal__body">
+      <div class="recap-modal__heading">
+        <img class="recap-modal__logo" id="recapModalLogo" src="" alt="" loading="lazy">
+        <div>
+          <span class="tag" id="recapModalCategory">THEATER</span>
+          <h2 class="modal__title" id="recapModalTitle">Event Name</h2>
+        </div>
+      </div>
+
+      <dl class="modal__meta">
+        <div><dt><strong>🗓️Date</strong></dt><dd id="recapModalDate">—</dd></div>
+        <div><dt><strong>Day</strong></dt><dd id="recapModalDay">—</dd></div>
+        <div><dt><strong>⏰Time</strong></dt><dd id="recapModalTime">—</dd></div>
+        <div><dt><strong>📍Location</strong></dt><dd id="recapModalLocation">—</dd></div>
+      </dl>
+
+      <p class="modal__description" id="recapModalDescription"></p>
+
+      <div class="recap-modal__songs">
+        <h3 class="recap-modal__subhead">Songs Performed</h3>
+        <ul class="song-list" id="recapModalSongs"></ul>
+      </div>
+
+      <div class="recap-modal__docs">
+        <h3 class="recap-modal__subhead">Documentation</h3>
+        <div class="doc-thumbs" id="recapModalDocs"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Fullscreen photo lightbox -->
+<div class="lightbox-overlay" id="lightbox" aria-hidden="true">
+  <span class="lightbox-counter" data-lightbox="counter">1 / 1</span>
+  <button class="lightbox-btn lightbox-btn--close" data-modal-close aria-label="Close preview">
+    <svg viewBox="0 0 24 24" width="20" height="20"><path d="M5 5l14 14M19 5L5 19" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+  </button>
+  <button class="lightbox-btn lightbox-btn--prev" data-lightbox="prev" aria-label="Previous photo">
+    <svg viewBox="0 0 24 24" width="20" height="20"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+  <button class="lightbox-btn lightbox-btn--next" data-lightbox="next" aria-label="Next photo">
+    <svg viewBox="0 0 24 24" width="20" height="20"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+  <figure class="lightbox-figure">
+    <img data-lightbox="img" src="" alt="">
+    <figcaption class="lightbox-caption">
+      <div class="lightbox-event" data-lightbox="event"></div>
+      <div class="lightbox-date" data-lightbox="date"></div>
+    </figcaption>
+  </figure>
+</div>
+
+
+<script src="assets/js/shared.js"></script>
+<script src="data/schedule.js"></script>
+<script src="data/recap.js"></script>
+<script src="recap.js"></script>
+<script src="anti-inspect.js"></script>
+</body>
+</html>

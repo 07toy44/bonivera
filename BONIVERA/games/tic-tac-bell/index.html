@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Tic Tac Bell — BONIVERA ARCADE</title>
+<link rel="stylesheet" href="../arcade.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="arcade-body tb-body">
+<main class="tb-screen">
+  <div class="tb-top">
+    <div class="arcade-logo">TIC TAC BELL</div>
+    <div class="tb-btns">
+      <button class="arcade-iconbtn" id="tb-menu-btn" type="button" aria-label="Menu">☰</button>
+      <button class="arcade-iconbtn" data-help type="button" aria-label="Tutorial">❓</button>
+      <button class="arcade-iconbtn" id="tb-mute" type="button"></button>
+    </div>
+  </div>
+  <div class="tb-score" id="tb-score" aria-label="Papan skor"></div>
+  <div class="tb-turn" id="tb-turn" role="status" aria-live="polite"></div>
+  <div class="tb-board" id="tb-board" role="grid" aria-label="Papan Tic Tac Bell"></div>
+  <p class="arcade-note" id="tb-mode-note"></p>
+</main>
+
+<div class="arcade-overlay tb-modal" id="tb-menu"><div class="arcade-dialog">
+  <h2>TIC TAC BELL</h2>
+  <h3>Lawan Bot</h3>
+  <p class="arcade-note">Kesulitan</p>
+  <div class="tb-seg" id="tb-diff" role="radiogroup" aria-label="Kesulitan">
+    <button type="button" role="radio" data-d="easy">MUDAH</button><button type="button" role="radio" data-d="normal">SEDANG</button><button type="button" role="radio" data-d="hard">SULIT</button>
+  </div>
+  <p class="arcade-note">Kamu bermain sebagai</p>
+  <div class="tb-seg" id="tb-mark" role="radiogroup" aria-label="Tanda">
+    <button type="button" role="radio" data-m="X">X (jalan duluan)</button><button type="button" role="radio" data-m="O">O (bot duluan)</button>
+  </div>
+  <div class="arcade-kv"><span>Progres pribadi</span><b id="tb-solo-stat">-</b></div>
+  <div class="arcade-row"><button class="arcade-btn" id="tb-start-solo" type="button">MULAI VS BOT</button></div>
+  <h3>Main Berdua (1 perangkat)</h3>
+  <div class="arcade-row"><button class="arcade-btn" id="tb-open-duo" type="button">PILIH PROGRES MABAR</button></div>
+  <div class="arcade-row"><a class="arcade-btn is-ghost" data-nav="game" href="../arcade.html">BACK TO GAME HOME</a><a class="arcade-btn is-ghost" data-nav="site" href="../../index.html">BACK TO WEBSITE HOME</a></div>
+</div></div>
+
+<div class="arcade-overlay tb-modal" id="tb-duo" hidden><div class="arcade-dialog">
+  <h2>Progres Mabar</h2>
+  <p class="arcade-note">Pilih progres yang mau dipakai. Tiap pasangan teman punya catatan menang/seri/kalah sendiri (maks. 8).</p>
+  <div id="tb-pairs"></div>
+  <h3>Progres baru</h3>
+  <div class="tb-names">
+    <label class="arcade-note" for="tb-n1">Pemain 1</label><input class="arcade-input tb-name" id="tb-n1" maxlength="12" autocomplete="off">
+    <label class="arcade-note" for="tb-n2">Pemain 2</label><input class="arcade-input tb-name" id="tb-n2" maxlength="12" autocomplete="off">
+  </div>
+  <div class="arcade-row"><button class="arcade-btn" id="tb-create" type="button">BUAT & MAIN</button></div>
+  <div class="arcade-row"><button class="arcade-btn is-ghost" id="tb-guest" type="button">MAIN TANPA SIMPAN</button><button class="arcade-btn is-ghost" id="tb-duo-back" type="button">KEMBALI</button></div>
+</div></div>
+
+<div class="arcade-overlay tb-modal" id="tb-result" hidden><div class="arcade-dialog">
+  <h2 id="tb-r-title">HASIL</h2><p class="arcade-note" id="tb-r-sub"></p>
+  <div id="tb-r-stats"></div>
+  <div class="arcade-row"><button class="arcade-btn" id="tb-again" type="button">MAIN LAGI</button><button class="arcade-btn is-ghost" id="tb-tomenu" type="button">GANTI MODE</button></div>
+  <div class="arcade-row"><a class="arcade-btn is-ghost" data-nav="game" href="../arcade.html">BACK TO GAME HOME</a><a class="arcade-btn is-ghost" data-nav="site" href="../../index.html">BACK TO WEBSITE HOME</a></div>
+</div></div>
+<script src="anti-inspect.js" defer></script>
+<script src="../games-registry.js"></script>
+<script src="../arcade-storage.js"></script>
+<script src="../arcade-audio.js"></script>
+<script src="../arcade-tutorial.js"></script>
+<script src="game.js"></script>
+</body>
+</html>

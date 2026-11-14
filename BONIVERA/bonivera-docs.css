@@ -1,0 +1,352 @@
+/* ============================================================
+   BONIVERA — BONIVERA GALLERY PAGE (bonivera-docs.html)
+   Dimuat setelah assets/css/shared.css dan documentation.css.
+
+   Semua aturan di-scope ke body[data-page="bonivera-docs"], jadi
+   tidak mengubah halaman Bella Gallery (documentation.html) dan
+   otomatis menimpa aturan .masonry lama dari documentation.css.
+
+   Prinsip
+   - SATU ukuran kartu: portrait 4:5 (sama dengan width/height di JS).
+   - Grid rapi: semua kartu sama besar, baris sejajar, jarak seragam.
+   - Foto tidak dipotong (object-fit: contain). Foto landscape
+     mendapat latar blur dari foto yang sama (variabel --photo).
+   - Warna mengikuti tema asli; hanya hitam/putih transparan dan
+     currentColor.
+
+   Daftar isi
+   1. Token
+   2. Page header
+   3. Section & grid
+   4. Kartu foto (latar blur, gambar, zoom, overlay)
+   5. Empty state
+   6. Responsive
+   7. Preferensi pengguna
+   ============================================================ */
+
+
+/* ------------------------------------------------------------
+   1. TOKEN
+------------------------------------------------------------ */
+[data-page="bonivera-docs"] {
+  --card-ratio: 4 / 5;                              /* portrait, satu-satunya ukuran */
+  --gap: clamp(0.75rem, 1.5vw, 1.25rem);
+  --frame: 6px;
+  --frame-radius: 16px;
+  --photo-radius: calc(var(--frame-radius) - var(--frame));
+  --frame-ring: color-mix(in srgb, currentColor 14%, transparent);
+  --card-shadow: 0 1px 2px rgba(0, 0, 0, 0.1),
+                 0 6px 16px rgba(0, 0, 0, 0.12);
+  --card-shadow-hover: 0 2px 4px rgba(0, 0, 0, 0.12),
+                       0 14px 30px rgba(0, 0, 0, 0.2);
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+
+/* ------------------------------------------------------------
+   2. PAGE HEADER (layout & tipografi; warna dari tema)
+------------------------------------------------------------ */
+[data-page="bonivera-docs"] .page-header {
+  padding: clamp(7rem, 14vw, 9.5rem) 0 clamp(2rem, 5vw, 3.5rem);
+  text-align: center;
+}
+
+[data-page="bonivera-docs"] .page-header__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+[data-page="bonivera-docs"] .page-header__title {
+  margin: 0;
+  font-size: clamp(2rem, 6vw, 3.5rem);
+  line-height: 1.08;
+  text-wrap: balance;
+}
+
+[data-page="bonivera-docs"] .page-header__lede {
+  max-width: 56ch;
+  margin: 0;
+  font-size: clamp(0.95rem, 2vw, 1.075rem);
+  line-height: 1.7;
+  text-wrap: pretty;
+}
+
+
+/* ------------------------------------------------------------
+   3. SECTION & GRID
+------------------------------------------------------------ */
+[data-page="bonivera-docs"] .documentation-section {
+  padding-block: clamp(1.5rem, 4vw, 3rem) clamp(3.5rem, 8vw, 6rem);
+}
+
+[data-page="bonivera-docs"] .masonry {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--gap);
+  /* netralkan sisa aturan columns dari documentation.css */
+  columns: auto;
+  column-count: auto;
+  column-gap: normal;
+}
+
+
+/* ------------------------------------------------------------
+   4. KARTU FOTO
+------------------------------------------------------------ */
+[data-page="bonivera-docs"] .masonry__item {
+  /* reset <button> */
+  appearance: none;
+  display: block;
+  width: 100%;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: zoom-in;
+  -webkit-tap-highlight-color: transparent;
+
+  /* bingkai: ukuran seragam portrait */
+  position: relative;
+  aspect-ratio: var(--card-ratio);
+  padding: var(--frame);
+  border: 1px solid var(--frame-ring);
+  border-radius: var(--frame-radius);
+  background: color-mix(in srgb, currentColor 10%, transparent);
+  box-shadow: var(--card-shadow);
+  overflow: hidden;
+  isolation: isolate;
+  break-inside: auto;
+
+  transition: box-shadow 0.3s var(--ease),
+              transform 0.3s var(--ease);
+}
+
+/* Latar: foto yang sama, diperbesar & di-blur (terlihat di sisa ruang,
+   terutama untuk foto landscape) */
+[data-page="bonivera-docs"] .masonry__item::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background-image: var(--photo, none);
+  background-size: cover;
+  background-position: center;
+  filter: blur(22px) saturate(1.15);
+  transform: scale(1.25);
+}
+
+/* Lapisan tipis agar foto utama menonjol */
+[data-page="bonivera-docs"] .masonry__item::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: rgba(0, 0, 0, 0.22);
+}
+
+/* Foto utama: utuh, di tengah bingkai */
+[data-page="bonivera-docs"] .masonry__item img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  border-radius: var(--photo-radius);
+  transition: transform 0.5s var(--ease);
+}
+
+/* Ikon zoom */
+[data-page="bonivera-docs"] .masonry__zoom {
+  position: absolute;
+  top: calc(var(--frame) + 0.6rem);
+  right: calc(var(--frame) + 0.6rem);
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  font-size: 1rem;
+  line-height: 1;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  opacity: 0;
+  transform: scale(0.85);
+  transition: opacity 0.25s var(--ease),
+              transform 0.25s var(--ease);
+}
+
+/* Overlay caption */
+[data-page="bonivera-docs"] .masonry__overlay {
+  position: absolute;
+  inset: auto 0 0 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 2.5rem 1rem 0.85rem;
+  color: #fff;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.85) 0%,
+    rgba(0, 0, 0, 0.5) 55%,
+    transparent 100%
+  );
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.3s var(--ease),
+              transform 0.3s var(--ease);
+}
+
+[data-page="bonivera-docs"] .masonry__caption {
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.35;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+
+[data-page="bonivera-docs"] .masonry__date {
+  font-size: 0.76rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+/* Hover — hanya perangkat dengan kursor */
+@media (hover: hover) and (pointer: fine) {
+  [data-page="bonivera-docs"] .masonry__item:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--card-shadow-hover);
+  }
+
+  [data-page="bonivera-docs"] .masonry__item:hover img {
+    transform: scale(1.02);
+  }
+}
+
+[data-page="bonivera-docs"] .masonry__item:hover .masonry__zoom,
+[data-page="bonivera-docs"] .masonry__item:hover .masonry__overlay,
+[data-page="bonivera-docs"] .masonry__item:focus-visible .masonry__zoom,
+[data-page="bonivera-docs"] .masonry__item:focus-visible .masonry__overlay {
+  opacity: 1;
+  transform: none;
+}
+
+[data-page="bonivera-docs"] .masonry__item:focus-visible {
+  outline: 3px solid currentColor;
+  outline-offset: 3px;
+}
+
+
+/* ------------------------------------------------------------
+   5. EMPTY STATE
+------------------------------------------------------------ */
+[data-page="bonivera-docs"] .empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  max-width: 28rem;
+  margin: 0 auto;
+  padding: clamp(2.5rem, 7vw, 4.5rem) 1.5rem;
+  text-align: center;
+  border: 2px dashed color-mix(in srgb, currentColor 25%, transparent);
+  border-radius: var(--frame-radius);
+  background: color-mix(in srgb, currentColor 4%, transparent);
+}
+
+[data-page="bonivera-docs"] .empty-state[hidden] {
+  display: none;
+}
+
+[data-page="bonivera-docs"] .empty-state__icon {
+  flex: none;
+  opacity: 0.6;
+}
+
+[data-page="bonivera-docs"] .empty-state p {
+  margin: 0;
+  font-size: 0.98rem;
+  line-height: 1.6;
+  opacity: 0.8;
+}
+
+
+/* ------------------------------------------------------------
+   6. RESPONSIVE
+------------------------------------------------------------ */
+@media (min-width: 1600px) {
+  [data-page="bonivera-docs"] .masonry {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1100px) {
+  [data-page="bonivera-docs"] .masonry {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  [data-page="bonivera-docs"] .masonry {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  [data-page="bonivera-docs"] {
+    --gap: 0.5rem;
+    --frame: 4px;
+    --frame-radius: 12px;
+  }
+
+  [data-page="bonivera-docs"] .masonry__item::before {
+    filter: blur(16px) saturate(1.15);
+  }
+
+  [data-page="bonivera-docs"] .masonry__overlay {
+    padding: 1.75rem 0.6rem 0.55rem;
+  }
+
+  [data-page="bonivera-docs"] .masonry__caption { font-size: 0.78rem; }
+  [data-page="bonivera-docs"] .masonry__date    { font-size: 0.68rem; }
+
+  [data-page="bonivera-docs"] .masonry__zoom {
+    width: 1.75rem;
+    height: 1.75rem;
+    top: calc(var(--frame) + 0.4rem);
+    right: calc(var(--frame) + 0.4rem);
+  }
+}
+
+
+/* ------------------------------------------------------------
+   7. PREFERENSI PENGGUNA
+------------------------------------------------------------ */
+
+/* Layar sentuh: tidak ada hover, caption & ikon zoom tampil terus */
+@media (hover: none) {
+  [data-page="bonivera-docs"] .masonry__overlay,
+  [data-page="bonivera-docs"] .masonry__zoom {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-page="bonivera-docs"] .masonry__item,
+  [data-page="bonivera-docs"] .masonry__item img,
+  [data-page="bonivera-docs"] .masonry__zoom,
+  [data-page="bonivera-docs"] .masonry__overlay {
+    transition: none;
+  }
+
+  [data-page="bonivera-docs"] .masonry__item:hover,
+  [data-page="bonivera-docs"] .masonry__item:hover img {
+    transform: none;
+  }
+}

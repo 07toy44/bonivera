@@ -1,0 +1,24 @@
+<svg viewBox="0 0 900 1100" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Bella portrait placeholder 2">
+  <defs>
+    <linearGradient id="pg_p2" x1="0%" y1="0%" x2="100%" y2="100%" gradientTransform="rotate(40)">
+      <stop offset="0%" stop-color="#BFD7F1"/>
+      <stop offset="100%" stop-color="#7A9BBE"/>
+    </linearGradient>
+    <radialGradient id="glow_p2" cx="50%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="900" height="1100" fill="url(#pg_p2)"/>
+  <rect width="900" height="1100" fill="url(#glow_p2)"/>
+  <path d="M 150 500.0 C 300.0 260 600.0 260 750 500.0 C 615.0 590.0 510.0 665.0 420.0 605.0 C 330.0 545.0 225.0 665.0 150 740.0" fill="none" stroke="#FFFFFF" stroke-width="16" stroke-linecap="round" opacity="0.22"/>
+  <g opacity="0.5" fill="#FFFFFF">
+    <circle cx="120" cy="160" r="3"/>
+    <circle cx="780" cy="220" r="2.4"/>
+    <circle cx="700" cy="900" r="3"/>
+    <circle cx="160" cy="940" r="2"/>
+    <circle cx="820" cy="620" r="2.6"/>
+  </g>
+  <rect x="310.0" y="1010" width="280" height="46" rx="23" fill="#3E5E8C" opacity="0.55"/>
+  <text x="450.0" y="1041" text-anchor="middle" font-family="Arial, sans-serif" font-size="19" fill="#FFFFFF" opacity="0.95">Bella photo placeholder</text>
+</svg>
